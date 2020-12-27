@@ -19,8 +19,7 @@
 				"extension/BackgroundStorage.js",
 				"extension/Extension.js",
 
-				"tasks/foo/procedures.js",
-				"tasks/foo/instructions/remove.js",
+				"sequences/foo.js",
 
 				"main.js"
 			]

@@ -19,5 +19,11 @@ This software was designed mainly to be used as a automation tool for browsers, 
 	* **UI** _directory_ contains all the html, js, css to build the user interface for the extension.
 - **Bot** _class_ represents the extension itself.
 - **vendor** _directory_ contains all the third-parts included on content and background scripts.
-- **tasks** _directory_ contains all the bot tasks. On this project jSpaghetti procedures and intructions compose all tasks especifications.
+- **sequences** _directory_ contains all the bot tasks. On this project, jSpaghetti modules & sequences compose all tasks especifications.
+
+## Basic operation
+
+The bot execute tasks through jSpaghetti modules. The UI listens for operator orders. An order is translated to a Message that goes from UI, which lives on action script, to the Bot, which lives on content script. The Bot calls the bind sequence to the order received. jSpaghetti consumes eventually the background script as storage to save/restore the sequence state.
+
+The UI uses the background script as storage as well to save/restore UI content inserted by operator or the Bot itself.
 
