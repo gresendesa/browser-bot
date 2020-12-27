@@ -2,11 +2,42 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="bootstrap-4.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-	<button class="trigger" name="remove">remove</button>
-	<button class="trigger" name="add">add</button>
-	<button class="trigger" name="something">something</button>
+
+	<div class="main-container">
+		<div class="card text-center">
+			<div class="card-header">
+				Featured
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+				<div class="row">
+					<div class="col">
+						<button name="remove" type="button" class="btn btn-info btn-block trigger">remove</button>
+					</div>
+					<div class="col">
+						<button name="add" type="button" class="btn btn-info btn-block trigger">add</button>
+					</div>
+					<div class="col">
+						<button name="something" type="button" class="btn btn-info btn-block trigger">something</button>
+					</div>
+				</div>
+
+			</div>
+			<div class="card-footer text-muted">
+				2 days ago
+			</div>
+		</div>
+	</div>
+		
+	<script type="text/javascript" src="jquery-3.5.1.min.js"></script>
+	<script type="text/javascript" src="bootstrap-4.1/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script.js"></script>
+
 </body>
 </html>
