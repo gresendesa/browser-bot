@@ -12,6 +12,7 @@
 			"run_at": "document_end",
 			"js": [
 				"vendor/jSpaghetti.min.js",
+				"extension/UI/UI.js",
 
 				"Bot.js",
 
