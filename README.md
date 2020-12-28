@@ -27,3 +27,31 @@ The bot execute tasks through jSpaghetti modules. The UI listens for operator or
 
 The UI uses the background script as storage as well to save/restore UI content inserted by operator or the Bot itself.
 
+## UI 
+
+The UI is a action script that have html, css and js files bind. The information contained on fields, buttons, et cetera, are saved/restored on the background storage. Such information can be retreived directly from the background script using a get message over the `Extension.CONSTANTS['UI_STORAGE']` item.
+
+For HTML elements: Each interactable element of UI must be marked with `.ui` class. Each clickable element that fires an order should carry the `.ui-order`; The order id must be placed on `name` attribute of the tag. Each data container element on UI is supposed to be assigned with `.ui-container` class. Each container field will be distinguished by its name, on `name` attribute of the tag. Additionally each field has to be identified by its type using a proper class:
+
+- `.ui-type-text` for fields that stores strings, numbers, or any kind of text directly.
+- `.ui-type-boolean` for checkboxes, for example.
+- `.ui-type-option` for lists of options.
+
+The UI fields are stored as an object separated by type as following:
+```json
+{
+	"text":{
+		"mytext1": "some text",
+		"mytext2": "some text"
+	},
+	"booleans":{
+
+	},
+	"options":{
+
+	}
+}
+```
+
+
+
