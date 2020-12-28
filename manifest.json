@@ -19,7 +19,7 @@
 				"extension/BackgroundStorage.js",
 				"extension/Extension.js",
 
-				"sequences/foo.js",
+				"modules/fooModule.js",
 
 				"main.js"
 			]

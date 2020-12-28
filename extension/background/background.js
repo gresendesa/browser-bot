@@ -4,6 +4,8 @@ var storage = []
 
 function requestHandler(request, sender, sendResponse){
 
+	console.log(request)
+
 	if(request.subject === 'get'){
 		let data = storage[String(`${request.item}:${sender.tab.id}`)]
 		sendResponse(new Message({subject: 'response', data}))

@@ -1,33 +1,32 @@
-var mod = $jSpaghetti.module("foo")
-mod.config.debugMode = true
+let mdule = $jSpaghetti.module("foo")
+mdule.config.debugMode = true
 
 //*****************************************************//
 // SEQUENCES INSTRUCTIONS ↓ ↓ ↓
 //_____________________________________________________//
 
-mod.sequence("remove").instructions = [
+mdule.sequence("remove").instructions = [
     {0: "C"},
     {"foo": [{"wait":2000},"A", "B"]}
 ]
 
-mod.sequence("add").instructions = [
-    {0: "A"},
-    {"foo": [{"wait":100},"C", "B"]}
+mdule.sequence("clear").instructions = [
+    {0: "_exit"}
 ]
 
 //*****************************************************//
 // PROCEDURES ↓ ↓ ↓
 //_____________________________________________________//
 
-mod.procedure("A", function(){
+mdule.procedure("A", function(){
     console.log("brown fox jumps ")
     return true
 })
-mod.procedure("B", function(){
+mdule.procedure("B", function(){
     console.log("over the lazy dog")
     return true
 })
-mod.procedure("C", function(shared, hooks){
+mdule.procedure("C", function(shared, hooks){
     console.log("quick ")
     return true
 })
