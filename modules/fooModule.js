@@ -18,15 +18,18 @@ mdule.sequence("clear").instructions = [
 // PROCEDURES ↓ ↓ ↓
 //_____________________________________________________//
 
-mdule.procedure("A", function(){
+mdule.procedure("A", function(shared){
+	console.log("A",shared)
     console.log("brown fox jumps ")
     return true
 })
-mdule.procedure("B", function(){
+mdule.procedure("B", function(shared){
+	console.log("B",shared)
     console.log("over the lazy dog")
     return true
 })
 mdule.procedure("C", function(shared, hooks){
+	console.log("C",shared, hooks)
     console.log("quick ")
     return true
 })

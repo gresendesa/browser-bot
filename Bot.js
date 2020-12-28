@@ -18,7 +18,10 @@ class Bot {
 				console.log('window opened')
 			} else
 			if(order === "remove"){
-				this.startSequence({ moduleName: 'foo', sequenceName: 'remove' })
+				const props = {
+					test: 'test-value'
+				}
+				this.startSequence({ moduleName: 'foo', sequenceName: 'remove', props })
 			} else
 			if(order === "add"){
 				console.log("adding")
@@ -49,7 +52,7 @@ class Bot {
 		}
 	}
 
-	startSequence({ moduleName, sequenceName }) {
+	startSequence({ moduleName, sequenceName, props }) {
 		this.state.currentSequence = {
 			moduleName,
 			sequenceName
@@ -57,6 +60,9 @@ class Bot {
 		const request = new Message({ subject: "set", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'], data: this.state.currentSequence })
 		chrome.runtime.sendMessage(request, (response) => {
 			const sequence = $jSpaghetti.module(moduleName).sequence(sequenceName)
+			if(props){
+				sequence.state.shared.props = props
+			}
 			const resetSequence = () => {
 				this.stop(() => {
 					sequence.events.removeEventListener("terminated", resetSequence)
