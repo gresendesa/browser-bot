@@ -4,6 +4,12 @@ class Bot {
 		currentSequence: null
 	}
 
+	static CONSTANTS() {
+		return {
+			'CURRENT_SEQUENCE_STORAGE': 'bot-current-sequence'
+		}
+	}
+
 	constructor() {
 		$jSpaghetti.Storage = BackgroundStorage 
 		const onOrder = (message, sender, sendReponse) => {
@@ -32,7 +38,7 @@ class Bot {
 		if(this.state.currentSequence !== null){
 			const { moduleName, sequenceName } = this.state.currentSequence
 			$jSpaghetti.module(moduleName).sequence(sequenceName).reset(() => {
-				const request = new Message({ subject: "reset", item: 'BOT-CURRENT-SEQUENCE'})
+				const request = new Message({ subject: "reset", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE']})
 				chrome.runtime.sendMessage(request, (response) => {
 					this.state.currentSequence =  null
 					if(typeof callback === 'function') callback()
@@ -48,7 +54,7 @@ class Bot {
 			moduleName,
 			sequenceName
 		}
-		const request = new Message({ subject: "set", item: 'BOT-CURRENT-SEQUENCE', data: this.state.currentSequence })
+		const request = new Message({ subject: "set", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'], data: this.state.currentSequence })
 		chrome.runtime.sendMessage(request, (response) => {
 			const sequence = $jSpaghetti.module(moduleName).sequence(sequenceName)
 			const resetSequence = () => {
@@ -62,7 +68,7 @@ class Bot {
 	}
 
 	run() {
-		const request = new Message({subject: "get", item: 'BOT-CURRENT-SEQUENCE'})
+		const request = new Message({subject: "get", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE']})
 		chrome.runtime.sendMessage(request, (response) => {
 			if(response.data){
 				const { moduleName, sequenceName } = response.data
