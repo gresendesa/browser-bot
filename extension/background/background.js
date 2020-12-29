@@ -4,20 +4,22 @@ var storage = []
 
 function requestHandler(request, sender, sendResponse){
 
-	console.log(request)
+	var response = undefined
 
 	if(request.subject === 'get'){
-		let data = storage[String(`${request.item}:${sender.tab.id}`)]
-		sendResponse(new Message({subject: 'response', data}))
+		response = storage[String(`${request.item}:${(sender.tab ? sender.tab.id : 0)}`)]
+		sendResponse(new Message({subject: 'response', data: response}))
 	} else
 	if(request.subject === 'set'){
-		storage[String(`${request.item}:${sender.tab.id}`)] = request.data
-		let data = 'item set'
-		sendResponse(new Message({subject: 'response', data}))
+		storage[String(`${request.item}:${(sender.tab ? sender.tab.id : 0)}`)] = request.data
+		response = 'item set'
+		sendResponse(new Message({subject: 'response', data: response}))
 	} else
 	if(request.subject === 'reset'){
-		storage[String(`${request.item}:${sender.tab.id}`)] = null
-		let data = 'item set'
-		sendResponse(new Message({subject: 'response', data}))
+		storage[String(`${request.item}:${(sender.tab ? sender.tab.id : 0)}`)] = null
+		response = 'item reset'
+		sendResponse(new Message({subject: 'response', data: response}))
 	}
+
+	console.log({ request , response, storage })
 }

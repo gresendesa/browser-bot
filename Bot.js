@@ -4,7 +4,7 @@ class Bot {
 		currentSequence: null
 	}
 
-	static CONSTANTS() {
+	static get CONSTANTS() {
 		return {
 			'CURRENT_SEQUENCE_STORAGE': 'bot-current-sequence'
 		}
