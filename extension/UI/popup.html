@@ -21,12 +21,29 @@
 						<button name="remove" type="button" class="btn btn-info btn-block ui ui-order">remove</button>
 					</div>
 					<div class="col">
-						<button name="add" type="button" class="btn btn-info btn-block ui ui-order">add</button>
+						<button name="browse" type="button" class="btn btn-info btn-block ui ui-order">browse</button>
 					</div>
 					<div class="col">
 						<button name="stop" type="button" class="btn btn-info btn-block ui ui-order">stop</button>
 					</div>
 				</div>
+
+				<form>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Email address</label>
+				    <input type="email" class="form-control ui ui-field ui-container-text" name="email" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+				    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+				  </div>
+				  <div class="form-check">
+				    <input type="checkbox" class="form-check-input ui ui-field ui-container-boolean" name="check-me" id="exampleCheck1">
+				    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+				  </div>
+					<select class="form-control form-control-sm ui ui-field ui-container-option" name="options">
+						<option value="1">Opt1</option>
+						<option value="2">Opt2</option>
+						<option value="3">Opt3</option>
+					</select>
+				</form>
 
 			</div>
 			<div class="card-footer text-muted">

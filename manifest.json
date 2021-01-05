@@ -21,6 +21,8 @@
 				"extension/Extension.js",
 
 				"modules/fooModule.js",
+				"modules/browseModule.js",
+
 
 				"main.js"
 			]

@@ -23,8 +23,8 @@ class Bot {
 				}
 				this.startSequence({ moduleName: 'foo', sequenceName: 'remove', props })
 			} else
-			if(order === "add"){
-				console.log("adding")
+			if(order === "browse"){
+				this.startSequence({ moduleName: 'browse', sequenceName: 'browse-on-internet' })
 			} else 
 			if(order === "stop"){
 				this.stop(() => {

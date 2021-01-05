@@ -44,10 +44,10 @@ The UI fields are stored as an object separated by type as following:
 		"mytext1": "some text",
 		"mytext2": "some text"
 	},
-	"booleans":{
+	"boolean":{
 
 	},
-	"options":{
+	"option":{
 
 	}
 }

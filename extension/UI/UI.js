@@ -9,6 +9,12 @@ class UI {
 				elem.addEventListener('click', UI.activateOrderTrigger)
 			})
 
+			let fields = document.getElementsByClassName('ui-field')
+
+			Array.prototype.forEach.call(fields, (elem) => {
+				elem.addEventListener('change', this.onFieldChange)
+			})
+
 			let queryInfo = {
 				active: true,
 				currentWindow: true
@@ -38,8 +44,8 @@ class UI {
 	state = {
 		fields: {
 			text: {},
-			booleans: {},
-			options: {}
+			boolean: {},
+			option: {}
 		}	
 	}
 
@@ -85,10 +91,25 @@ class UI {
 
 	updateField({ type, name, value, callback }) {
 		this.state.fields[type][name] = value
-		const request = { subject: "set", item: UI.CONSTANTS['UI_STATE'], data: this.fields }
+		const request = { subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} }
 		chrome.runtime.sendMessage(request, (response) => {
 			if(typeof callback === 'function') callback()
 		})
+	}
+
+	onFieldChange = (event) => {
+
+		const target = event.target
+
+		if(target.className.includes('ui-container-text')){
+			this.updateField({ type: 'text', name: target.name, value: target.value })
+		} else 
+		if(target.className.includes('ui-container-boolean')){
+			this.updateField({ type: 'boolean', name: target.name, value: target.checked })
+		} else
+		if(target.className.includes('ui-container-option')){
+			this.updateField({ type: 'option', name: target.name, value: target.value })
+		}
 	}
 
 }
