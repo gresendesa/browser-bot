@@ -8,10 +8,25 @@ class UI {
 			Array.prototype.forEach.call(orders, (elem) => {
 				elem.addEventListener('click', UI.activateOrderTrigger)
 			})
-
 			let fields = document.getElementsByClassName('ui-field')
-
 			Array.prototype.forEach.call(fields, (elem) => {
+
+				const assignValue = (element, attr, value) => {
+					if(value){
+						elem[attr] = value
+					}
+				}
+
+				let elemClass = elem.className
+				if(elemClass.includes('ui-container-text')){
+					 assignValue(elem, 'value', this.state.fields.text[elem.name])
+				} else 
+				if(elemClass.includes('ui-container-boolean')){
+					assignValue(elem, 'checked', this.state.fields.boolean[elem.name])
+				} else
+				if(elemClass.includes('ui-container-option')){
+					assignValue(elem, 'value', this.state.fields.option[elem.name])
+				}
 				elem.addEventListener('change', this.onFieldChange)
 			})
 
