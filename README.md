@@ -38,18 +38,24 @@ For HTML elements: Each interactable element of UI must be marked with `.ui` cla
 - `.ui-container-option` for lists of options.
 - `.ui-container-radio` for lists of options using radio input.
 
-The UI fields are stored as an object separated by type as following:
+The UI data are stored as an object separated by type as following example:
 ```json
 {
-	"text":{
-		"mytext1": "some text",
-		"mytext2": "some text"
-	},
-	"boolean":{
-
-	},
-	"option":{
-
+	"fields":{
+		"text":{
+			"fieldtext1": "some text",
+			"fieldtext2": "some text"
+		},
+		"boolean":{
+			"fieldbool1": true,
+			"fieldbool2": false
+		},
+		"option":{
+			"fieldoption1": "1"
+		},
+		"radio":{
+			"fieldradio1": "10"
+		}
 	}
 }
 ```
