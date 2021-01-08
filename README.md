@@ -36,6 +36,7 @@ For HTML elements: Each interactable element of UI must be marked with `.ui` cla
 - `.ui-container-text` for fields that stores strings, numbers, or any kind of text directly.
 - `.ui-container-boolean` for checkboxes, for example.
 - `.ui-container-option` for lists of options.
+- `.ui-container-radio` for lists of options using radio input.
 
 The UI fields are stored as an object separated by type as following:
 ```json

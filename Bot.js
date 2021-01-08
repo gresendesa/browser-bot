@@ -13,14 +13,14 @@ class Bot {
 	constructor() {
 		$jSpaghetti.Storage = BackgroundStorage 
 		const onOrder = (message, sender, sendReponse) => {
-			const order = message.subject
+			//console.log(message)
+			const order = message.item
+			const bot = message.data
 			if(order === "loaded"){
 				console.log('window opened')
 			} else
 			if(order === "remove"){
-				const props = {
-					test: 'test-value'
-				}
+				const props = bot
 				this.startSequence({ moduleName: 'foo', sequenceName: 'remove', props })
 			} else
 			if(order === "browse"){

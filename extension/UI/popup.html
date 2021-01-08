@@ -29,22 +29,40 @@
 				</div>
 
 				<form>
-				  <div class="form-group">
-				    <label for="exampleTextEmail1">Email address</label>
-				    <input type="text" class="form-control ui ui-field ui-container-text" name="email" id="exampleTextEmail1" aria-describedby="ariatext" placeholder="Enter text">
-				    <small id="ariatext" class="form-text text-muted">We'll never share your email with anyone else.</small>
-				  </div>
-				  <div class="form-check">
-				    <input type="checkbox" class="form-check-input ui ui-field ui-container-boolean" name="check-me" id="exampleCheck1">
-				    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-				  </div>
+				  
+				  	<div class="form-group">
+				    	<label for="exampleTextEmail1">Email address</label>
+				    	<input type="text" class="form-control ui ui-field ui-container-text" name="email" id="exampleTextEmail1" aria-describedby="ariatext" placeholder="Enter text" value="opa">
+				    	<small id="ariatext" class="form-text text-muted">We'll never share your email with anyone else.</small>
+				  	</div>
+				  	<div class="row">
+						<div class="col">
+							<div class="radio">
+								<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="1">Option 1</label>
+							</div>
+						</div>
+						<div class="col">
+							<div class="radio">
+								<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="2">Option 2</label>
+							</div>
+						</div>
+						<div class="col">
+							<div class="radio">
+								<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="3" checked>Option 3</label>
+							</div> 
+						</div>
+					</div>
+							
+				  	<div class="form-check">
+				    	<input type="checkbox" class="form-check-input ui ui-field ui-container-boolean" name="check-me" id="exampleCheck1">
+				    	<label class="form-check-label" for="exampleCheck1">Check me out</label>
+				  	</div>
 					<select class="form-control form-control-sm ui ui-field ui-container-option" name="options">
 						<option value="1">Opt1</option>
-						<option value="2">Opt2</option>
-						<option value="3">Opt3</option>
+						<option value="2" selected="">Opt2</option>
+						<option value="3" >Opt3</option>
 					</select>
 				</form>
-
 			</div>
 			<div class="card-footer text-muted">
 				2 days ago
