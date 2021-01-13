@@ -30,6 +30,8 @@ mdule.procedure("B", function(shared){
 })
 mdule.procedure("C", function(shared, hooks){
 	console.log("C",shared, hooks)
+    const { sayHello } = hooks
+    sayHello()
     console.log("quick ")
     return true
 })

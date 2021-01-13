@@ -1,5 +1,12 @@
 class UI {
 
+
+	/*
+		This constructor sets all the listeners for ui components
+		As well it assigns propper values to its components
+		Fist of all it requires background script to get values on memory
+	*/
+
 	constructor() {
 			
 		const bootstrap = () => {
@@ -73,6 +80,11 @@ class UI {
 		}
 	}
 
+	/*
+		This state represents all the current state of the UI
+		Attributes and values should be assigned here
+	*/
+
 	state = {
 		fields: {
 			text: {},
@@ -82,13 +94,25 @@ class UI {
 		}	
 	}
 
+
+	/*
+		It emits a message as soon as the popup is loaded after clicking browser action
+	*/
 	static sendLoadMessage(tabs){
 		const message = {
-			subject: 'loaded'
+			subject: 'event',
+			item: 'loaded'
 		}
 		chrome.tabs.sendMessage(tabs[0].id, message)
 	}
 
+
+	/*
+		This funtion handles orders raised by click events
+		It sends a message to the current tab especifying order and bot state snapshot
+		It ensures message is received by the endpoint. To do that, it sends 
+		repeatedly messages not received
+	*/
 	activateOrderTrigger = (e) => {
 		let queryInfo = {
 			active: true,
@@ -100,11 +124,22 @@ class UI {
 			data: this.state
 		}
 		function sendClickMessage(tabs){
-			chrome.tabs.sendMessage(tabs[0].id, message)
+			//console.log('sending', message, 'to', tabs[0].id, queryInfo)
+			chrome.tabs.sendMessage(tabs[0].id, message, (message) => {
+				//console.warn('click response', message)
+				if(message === undefined){
+					console.warn('ENDING DID NOT RESPOND. Sending order again!')
+					chrome.tabs.query(queryInfo, sendClickMessage)
+				}
+			})
 		}
+
 		chrome.tabs.query(queryInfo, sendClickMessage)
 	}
 
+	/*
+		It get state from background script and it passed the data to callback argument
+	*/
 	fetchState({ callback }) {
 		console.log('ui constants', UI.CONSTANTS['UI_STATE'])
 		console.log('fetching state')
@@ -114,6 +149,9 @@ class UI {
 		})
 	}
 
+	/*
+		It updates the state both the on background script and on the object itself
+	*/
 	updateState({ state, callback }){
 		console.log('ui constants', UI.CONSTANTS['UI_STATE'])
 		console.log('updating state')
@@ -124,6 +162,10 @@ class UI {
 		})
 	}
 
+	/*
+		It updates a field from state
+		It updates the state both the on background script and on the object itself
+	*/
 	updateField({ type, name, value, callback }) {
 		this.state.fields[type][name] = value
 		const request = { subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} }
@@ -132,6 +174,9 @@ class UI {
 		})
 	}
 
+	/*
+		It handles changes on the UI elements from DOM based on their classes
+	*/
 	onFieldChange = (event) => {
 
 		const target = event.target

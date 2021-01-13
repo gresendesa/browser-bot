@@ -1,7 +1,8 @@
 class Bot {
 
 	state = {
-		currentSequence: null
+		currentSequence: null,
+		ready: false
 	}
 
 	static get CONSTANTS() {
@@ -10,10 +11,15 @@ class Bot {
 		}
 	}
 
+	/*
+		This constructor binds future orders to sequences of jSpaghetti
+		It pretty much set a listener for incomming messages
+	*/
 	constructor() {
-		$jSpaghetti.Storage = BackgroundStorage 
+		$jSpaghetti.Storage = BackgroundStorage
 		const onOrder = (message, sender, sendReponse) => {
 			//console.log(message)
+			sendReponse(new Message({subject: 'event', item: 'received'}))
 			const order = message.item
 			const bot = message.data
 			if(order === "loaded"){
@@ -32,18 +38,22 @@ class Bot {
 				})
 			} else {
 				console.log("unknown command")
-			} 
+			}
 		}
 		chrome.runtime.onMessage.addListener(onOrder)
 	}
 
-	stop(callback) {
+	/*
+		This function resets the current sequence if it is available
+		and then executes the callback which is passed
+	*/
+	reset(callback) {
 		if(this.state.currentSequence !== null){
 			const { moduleName, sequenceName } = this.state.currentSequence
 			$jSpaghetti.module(moduleName).sequence(sequenceName).reset(() => {
 				const request = new Message({ subject: "reset", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE']})
 				chrome.runtime.sendMessage(request, (response) => {
-					this.state.currentSequence =  null
+					this.state.currentSequence = null
 					if(typeof callback === 'function') callback()
 				})
 			})
@@ -52,6 +62,29 @@ class Bot {
 		}
 	}
 
+	/*
+		As the stop message comes from outside, it's possible to get this order
+		before bot is properly loaded. 
+		This function calls itself util bot is ready to be stopped
+		The callback passed is executed before bot is stopped
+	*/
+	stop(callback) {
+		console.warn('stop called. bot ready?', this.state.ready)
+		if(this.state.ready){
+			this.reset(callback)
+		} else {
+			setTimeout(() => {
+				this.stop(callback)
+			}, 0)
+		}
+	}
+
+	/*
+		This function starts a jSpaghetti sequence passing to it props
+		that will be available on the first argument of the procedures
+		That function passes to the sequence the defined hooks as well
+		It also changes the bot state on the background script
+	*/
 	startSequence({ moduleName, sequenceName, props }) {
 		this.state.currentSequence = {
 			moduleName,
@@ -60,6 +93,9 @@ class Bot {
 		const request = new Message({ subject: "set", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'], data: this.state.currentSequence })
 		chrome.runtime.sendMessage(request, (response) => {
 			const sequence = $jSpaghetti.module(moduleName).sequence(sequenceName)
+
+			Object.assign(sequence.hooks, new Util()) //Push custom hooks to sequence
+			
 			if(props){
 				sequence.state.shared.props = props
 			}
@@ -73,13 +109,19 @@ class Bot {
 		})	
 	}
 
-	run() {
+	/*
+		This method requests the background script in order to load sequence state
+		If no sequence is active nothing happens, but the ready property of the bot
+		is set as true anyway
+	*/
+	start() {
 		const request = new Message({subject: "get", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE']})
 		chrome.runtime.sendMessage(request, (response) => {
 			if(response.data){
 				const { moduleName, sequenceName } = response.data
 				this.startSequence({ moduleName, sequenceName })
 			}
+			this.state.ready = true
 		})
 	}
 }
