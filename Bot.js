@@ -5,6 +5,8 @@ class Bot {
 		ready: false
 	}
 
+	events = document.createDocumentFragment()
+
 	static get CONSTANTS() {
 		return {
 			'CURRENT_SEQUENCE_STORAGE': 'bot-current-sequence'
@@ -19,11 +21,18 @@ class Bot {
 		$jSpaghetti.Storage = BackgroundStorage
 		const onOrder = (message, sender, sendReponse) => {
 			//console.log(message)
-			sendReponse(new Message({subject: 'event', item: 'received'}))
+
+			const { text, color } = new BrowserConsole()
+
+			setTimeout(() => {
+				this.events.dispatchEvent(new Event('teste'))
+			}, 3000)
+
+			sendReponse(new Message({subject: 'event', item: 'received', data: this}))
 			const order = message.item
 			const bot = message.data
 			if(order === "loaded"){
-				console.log('window opened')
+				console.log(text('window opened'), color('info'))
 			} else
 			if(order === "remove"){
 				const props = bot
@@ -34,10 +43,10 @@ class Bot {
 			} else 
 			if(order === "stop"){
 				this.stop(() => {
-					console.log('program stopped')
+					console.log(text('program stopped'), color('success'))
 				})
 			} else {
-				console.log("unknown command")
+				console.log(text('unknown command'), color('warning'))
 			}
 		}
 		chrome.runtime.onMessage.addListener(onOrder)
@@ -69,7 +78,9 @@ class Bot {
 		The callback passed is executed before bot is stopped
 	*/
 	stop(callback) {
-		console.warn('stop called. bot ready?', this.state.ready)
+
+		const { text, color } = new BrowserConsole()
+		console.log(text('stop called. bot ready?'), color('warning'), this.state.ready)
 		if(this.state.ready){
 			this.reset(callback)
 		} else {

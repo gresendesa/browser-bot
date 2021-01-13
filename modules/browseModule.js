@@ -27,14 +27,16 @@ mod.procedure("access-next-link", function(shared, hooks){
         shared.isThereLinks = true
         window.location.replace(link)
     } else {
-        console.warn("no links")
+        const { text, color } = new BrowserConsole('links', 10)
+        console.log(text('no links'), color('warning'))
     }
 })
 
 mod.procedure("scrap-page-links", function(shared){
     if(shared.isThereLinks){
         var links = document.getElementsByTagName('a')
-        console.warn(`${links.length} links captured`)
+        const { text, color } = new BrowserConsole('links', 10)
+        console.log(text(links.length), color('warning'))
         Array.prototype.forEach.call(links, (l) => {
             shared.links.push(l.href)
         })

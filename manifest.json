@@ -12,6 +12,7 @@
 			"run_at": "document_end",
 			"js": [
 				"vendor/jSpaghetti.min.js",
+				"vendor/BrowserConsole.js",
 				"extension/UI/UI.js",
 
 				"hooks.js",
@@ -31,6 +32,7 @@
 	],
 	"background": {
 		"scripts": [
+			"vendor/BrowserConsole.js",
 			"extension/Message.js",
 			"extension/background/background.js"
 		],

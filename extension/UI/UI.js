@@ -126,9 +126,12 @@ class UI {
 		function sendClickMessage(tabs){
 			//console.log('sending', message, 'to', tabs[0].id, queryInfo)
 			chrome.tabs.sendMessage(tabs[0].id, message, (message) => {
-				//console.warn('click response', message)
+				console.info('click response', message)
+				if((message) && (message.data) && (message.data.events)){
+					console.info('click response', message.data.events)
+				}
 				if(message === undefined){
-					console.warn('ENDING DID NOT RESPOND. Sending order again!')
+					console.info('ENDING DID NOT RESPOND. Sending order again!')
 					chrome.tabs.query(queryInfo, sendClickMessage)
 				}
 			})
