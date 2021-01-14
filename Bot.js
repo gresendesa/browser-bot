@@ -5,8 +5,6 @@ class Bot {
 		ready: false
 	}
 
-	events = document.createDocumentFragment()
-
 	static get CONSTANTS() {
 		return {
 			'CURRENT_SEQUENCE_STORAGE': 'bot-current-sequence'
@@ -21,14 +19,8 @@ class Bot {
 		$jSpaghetti.Storage = BackgroundStorage
 		const onOrder = (message, sender, sendReponse) => {
 			//console.log(message)
-
 			const { text, color } = new BrowserConsole()
-
-			setTimeout(() => {
-				this.events.dispatchEvent(new Event('teste'))
-			}, 3000)
-
-			sendReponse(new Message({subject: 'event', item: 'received', data: this}))
+			sendReponse(new Message({ subject: 'event', item: 'received' }))
 			const order = message.item
 			const bot = message.data
 			if(order === "loaded"){
@@ -46,9 +38,12 @@ class Bot {
 					console.log(text('program stopped'), color('success'))
 				})
 			} else {
-				console.log(text('unknown command'), color('warning'))
+				console.log(text('unknown command'), color('warning'), message)
 			}
+
+			return true
 		}
+
 		chrome.runtime.onMessage.addListener(onOrder)
 	}
 
@@ -60,7 +55,7 @@ class Bot {
 		if(this.state.currentSequence !== null){
 			const { moduleName, sequenceName } = this.state.currentSequence
 			$jSpaghetti.module(moduleName).sequence(sequenceName).reset(() => {
-				const request = new Message({ subject: "reset", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE']})
+				const request = new Message({ context: "background", subject: "reset", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE']})
 				chrome.runtime.sendMessage(request, (response) => {
 					this.state.currentSequence = null
 					if(typeof callback === 'function') callback()
@@ -101,7 +96,7 @@ class Bot {
 			moduleName,
 			sequenceName
 		}
-		const request = new Message({ subject: "set", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'], data: this.state.currentSequence })
+		const request = new Message({ context: "background", subject: "set", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'], data: this.state.currentSequence })
 		chrome.runtime.sendMessage(request, (response) => {
 			const sequence = $jSpaghetti.module(moduleName).sequence(sequenceName)
 
@@ -113,6 +108,10 @@ class Bot {
 			const resetSequence = () => {
 				this.stop(() => {
 					sequence.events.removeEventListener("terminated", resetSequence)
+					const request = new Message({ context: "ui", subject: "bot-reset" })
+					chrome.runtime.sendMessage(request, (response) => {
+						console.log(response)
+					})
 				})				
 			}
 			sequence.events.addEventListener("terminated", resetSequence)
@@ -126,7 +125,7 @@ class Bot {
 		is set as true anyway
 	*/
 	start() {
-		const request = new Message({subject: "get", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE']})
+		const request = new Message({ context: "background", subject: "get", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'] })
 		chrome.runtime.sendMessage(request, (response) => {
 			if(response.data){
 				const { moduleName, sequenceName } = response.data

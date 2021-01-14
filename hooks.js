@@ -15,4 +15,8 @@ class Util {
 		console.log('saying hello')
 	}
 
+	updateUI = function(state) {
+
+	}
+
 }

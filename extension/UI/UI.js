@@ -2,6 +2,28 @@ class UI {
 
 
 	/*
+		This state represents all the current state of the UI
+		Attributes and values should be assigned here
+	*/
+
+	state = {
+		fields: {
+			text: {},
+			boolean: {},
+			option: {},
+			radio: {}
+		},
+		freezed: false
+	}
+
+	static get CONSTANTS() {
+		return {
+			'UI_STATE': 'ui-state'
+		}
+	}
+
+
+	/*
 		This constructor sets all the listeners for ui components
 		As well it assigns propper values to its components
 		Fist of all it requires background script to get values on memory
@@ -9,48 +31,31 @@ class UI {
 
 	constructor() {
 			
+
+		const handleEvents = (request, sender, sendResponse) => {
+
+			if(request.context === 'ui'){
+				sendResponse({subject: 'response', item: 'received'})
+				if(request.subject === 'bot-reset'){
+					
+				} else 
+				if(request.subject === 'update-state'){
+
+				}
+			}
+
+			return true
+		}
+
 		const bootstrap = () => {
+
 			console.log('bootstrap', this.state)
 			let orders = document.getElementsByClassName('ui-order')
 			Array.prototype.forEach.call(orders, (elem) => {
 				elem.addEventListener('click', this.activateOrderTrigger)
 			})
-			let fields = document.getElementsByClassName('ui-field')
-			Array.prototype.forEach.call(fields, (elem) => {
 
-				const assignValue = (element, attr, value) => {
-					if(value){
-						elem[attr] = value
-						return true
-					}
-					return false
-				}
-
-				let elemClass = elem.className
-				if(elemClass.includes('ui-container-text')){
-					 if(!assignValue(elem, 'value', this.state.fields.text[elem.name])){
-					 	this.state.fields.text[elem.name] = elem.value
-					 }
-				} else 
-				if(elemClass.includes('ui-container-boolean')){
-					if(!assignValue(elem, 'checked', this.state.fields.boolean[elem.name])){
-						this.state.fields.boolean[elem.name] = elem.checked
-					}
-				} else
-				if(elemClass.includes('ui-container-option')){
-					if(!assignValue(elem, 'value', this.state.fields.option[elem.name])){
-						this.state.fields.option[elem.name] = elem.value
-					}
-				} else 
-				if(elemClass.includes('ui-container-radio')){
-					if(this.state.fields.radio[elem.name]==elem.value){
-						assignValue(elem, 'checked', true)
-					} else 
-					if((elem.checked) && (!this.state.fields.radio[elem.name])){
-						this.state.fields.radio[elem.name] = elem.value
-					}
-					
-				}
+			this.renderFields((elem) => {
 				elem.addEventListener('change', this.onFieldChange)
 			})
 
@@ -70,30 +75,70 @@ class UI {
 			}
 		}
 
+		//Receive messages from background-script and content script
+		chrome.runtime.onMessage.addListener(handleEvents)
+
 		this.fetchState({ callback })
 
 	}
 
-	static get CONSTANTS() {
-		return {
-			'UI_STATE': 'ui-state'
-		}
+	/*
+		It update values of all the UI fields based on the current state
+		It accepts a hook which receives each element
+		to do whatever the programmer wants
+	*/
+	renderFields(hook) {
+		let fields = document.getElementsByClassName('ui-field')
+		Array.prototype.forEach.call(fields, (elem) => {
+
+			const assignValue = (element, attr, value) => {
+				if(value){
+					elem[attr] = value
+					return true
+				}
+				return false
+			}
+
+			let elemClass = elem.className
+			if(elemClass.includes('ui-container-text')){
+				 if(!assignValue(elem, 'value', this.state.fields.text[elem.name])){
+				 	this.state.fields.text[elem.name] = elem.value
+				 }
+			} else 
+			if(elemClass.includes('ui-container-boolean')){
+				if(!assignValue(elem, 'checked', this.state.fields.boolean[elem.name])){
+					this.state.fields.boolean[elem.name] = elem.checked
+				}
+			} else
+			if(elemClass.includes('ui-container-option')){
+				if(!assignValue(elem, 'value', this.state.fields.option[elem.name])){
+					this.state.fields.option[elem.name] = elem.value
+				}
+			} else 
+			if(elemClass.includes('ui-container-radio')){
+				if(this.state.fields.radio[elem.name]==elem.value){
+					assignValue(elem, 'checked', true)
+				} else 
+				if((elem.checked) && (!this.state.fields.radio[elem.name])){
+					this.state.fields.radio[elem.name] = elem.value
+				}
+				
+			}
+			if(typeof hook === 'function'){
+				hook(elem)
+			}
+		})
 	}
 
 	/*
-		This state represents all the current state of the UI
-		Attributes and values should be assigned here
+		It disables/enables all the fields with iu class
 	*/
-
-	state = {
-		fields: {
-			text: {},
-			boolean: {},
-			option: {},
-			radio: {}
-		}	
+	freeze(yesOrNo){
+		let uis = document.getElementsByClassName('ui')
+		Array.prototype.forEach.call(uis, (elem) => {
+			elem.disabled = yesOrNo
+		})
 	}
-
 
 	/*
 		It emits a message as soon as the popup is loaded after clicking browser action
@@ -105,7 +150,6 @@ class UI {
 		}
 		chrome.tabs.sendMessage(tabs[0].id, message)
 	}
-
 
 	/*
 		This funtion handles orders raised by click events
@@ -119,17 +163,16 @@ class UI {
 			currentWindow: true
 		}
 		const message = {
+			context: 'content',
 			subject: 'order',
 			item: e.target.name,
 			data: this.state
 		}
-		function sendClickMessage(tabs){
-			//console.log('sending', message, 'to', tabs[0].id, queryInfo)
+		const sendClickMessage = (tabs) => {
+			console.log('sending', message, 'to', tabs[0].id, queryInfo)
 			chrome.tabs.sendMessage(tabs[0].id, message, (message) => {
+				this.freeze(true)
 				console.info('click response', message)
-				if((message) && (message.data) && (message.data.events)){
-					console.info('click response', message.data.events)
-				}
 				if(message === undefined){
 					console.info('ENDING DID NOT RESPOND. Sending order again!')
 					chrome.tabs.query(queryInfo, sendClickMessage)
@@ -146,7 +189,7 @@ class UI {
 	fetchState({ callback }) {
 		console.log('ui constants', UI.CONSTANTS['UI_STATE'])
 		console.log('fetching state')
-		const request = { subject: "get", item: UI.CONSTANTS['UI_STATE'], data: null }
+		const request = { context: "background", subject: "get", item: UI.CONSTANTS['UI_STATE'], data: null }
 		chrome.runtime.sendMessage(request, (response) => {
 			if(typeof callback === 'function') callback(response.data)
 		})
@@ -155,12 +198,16 @@ class UI {
 	/*
 		It updates the state both the on background script and on the object itself
 	*/
-	updateState({ state, callback }){
+	updateState({ state, callback, replace=false }){
 		console.log('ui constants', UI.CONSTANTS['UI_STATE'])
 		console.log('updating state')
-		const request = { subject: "set", item: UI.CONSTANTS['UI_STATE'], data: state }
+		const request = { context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: state }
 		chrome.runtime.sendMessage(request, (response) => {
-			this.state = state
+			if(replace){
+				this.state = state
+			} else {
+				Object.assign(this.state, {...state})
+			}
 			if(typeof callback === 'function') callback()
 		})
 	}
@@ -171,7 +218,7 @@ class UI {
 	*/
 	updateField({ type, name, value, callback }) {
 		this.state.fields[type][name] = value
-		const request = { subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} }
+		const request = { context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} }
 		chrome.runtime.sendMessage(request, (response) => {
 			if(typeof callback === 'function') callback()
 		})

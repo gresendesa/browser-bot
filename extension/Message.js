@@ -5,7 +5,8 @@
 	Data stores all secondary data that follows the message
 */
 class Message {
-	constructor({subject, item, data}){
+	constructor({context, subject, item, data}){
+		this.context = context
 		this.subject = subject
 		this.item = item
 		this.data = data
