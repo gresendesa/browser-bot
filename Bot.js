@@ -85,7 +85,6 @@ class Bot {
 		The callback passed is executed before bot is stopped
 	*/
 	stop(callback) {
-
 		const { text, color } = new BrowserConsole()
 		console.log(text('stop called. bot ready?'), color('warning'), this.state.ready)
 		if(this.state.ready){

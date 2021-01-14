@@ -89,20 +89,33 @@ class UI {
 			chrome.tabs.query(queryInfo, sendLoadMessage)
 		} 
 
+		const updateUIFreeze = () => {
+			//console.log('opa, currentSequence', currentSequence)
+			this.getBotCurrentSequence({ 
+				callback: currentSequence => {
+					let state = {
+						freezed: ((currentSequence) ? true : false)
+					}
+					this.updateState({
+						state,
+						callback: bootstrap
+					})
+				} 
+			})
+		}
+
 		const callback = (state) => {
 			if(state){
 				this.state = state
-				bootstrap(this.state)
+				updateUIFreeze()
 			} else {
-				this.updateState({ state: this.state, callback: bootstrap })
+				this.updateState({ state: this.state, callback: updateUIFreeze })
 			}
 		}
 
 		//Receive messages from background-script and content script
 		chrome.runtime.onMessage.addListener(handleEvents)
-
 		this.fetchState({ callback })
-		this.getBotCurrentSequence({ callback: () => {} })
 
 	}
 
@@ -222,9 +235,19 @@ class UI {
 	}
 
 	getBotCurrentSequence({ callback }) {
-		const request = new Message({ context: "background", subject: "get", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'] })
-		chrome.runtime.sendMessage(request, (response) => {
-			console.log('bot-current-sequence', response)
+		let queryInfo = {
+			active: true,
+			currentWindow: true
+		}
+		chrome.tabs.query(queryInfo, (tabs) => {
+			const data = {
+				tabId: tabs[0].id
+			}
+			const request = new Message({ context: "background", subject: "get", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'], data })
+			chrome.runtime.sendMessage(request, (response) => {
+				if(typeof callback === 'function') callback(response.data)
+			})
+
 		})
 	}
 
