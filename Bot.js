@@ -78,6 +78,10 @@ class Bot {
 		console.log(text('stop called. bot ready?'), color('warning'), this.state.ready)
 		if(this.state.ready){
 			this.reset(callback)
+			const request = new Message({ context: "ui", subject: "bot-reset" })
+			chrome.runtime.sendMessage(request, (response) => {
+				console.log(response)
+			})
 		} else {
 			setTimeout(() => {
 				this.stop(callback)
@@ -108,10 +112,6 @@ class Bot {
 			const resetSequence = () => {
 				this.stop(() => {
 					sequence.events.removeEventListener("terminated", resetSequence)
-					const request = new Message({ context: "ui", subject: "bot-reset" })
-					chrome.runtime.sendMessage(request, (response) => {
-						console.log(response)
-					})
 				})				
 			}
 			sequence.events.addEventListener("terminated", resetSequence)

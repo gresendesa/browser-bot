@@ -1,3 +1,19 @@
 .main-container {
 	width: 576px
 }
+
+.title {
+	margin-bottom: 0;
+	color: gray;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.box div {
+  width: 100px;
+  height: 100px;
+}

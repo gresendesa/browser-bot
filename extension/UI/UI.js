@@ -44,6 +44,7 @@ class UI {
 						state: request.data,
 						callback: () => {
 							sendResponse({ subject: 'response', item: 'updated' })
+							this.renderFields()
 						}
 					})
 					
@@ -93,9 +94,10 @@ class UI {
 		It accepts a hook which receives each element
 		to do whatever the programmer wants
 	*/
-	renderFields(hook) {
+	renderFields = hook => {
+		console.log('rendering again')
 		let fields = document.getElementsByClassName('ui-field')
-		Array.prototype.forEach.call(fields, (elem) => {
+		Array.prototype.forEach.call(fields, elem => {
 
 			const assignValue = (element, attr, value) => {
 				if(value){
