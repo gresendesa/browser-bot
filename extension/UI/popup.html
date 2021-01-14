@@ -20,56 +20,73 @@
 				</div>
 			</div>
 			<div class="card-body">
-				<h5 class="card-title">Active sequences bellow</h5>
-				<p class="card-text">Use STOP to abort sequences execution</p>
 
-				<div class="row">
-					<div class="col">
-						<button name="remove" type="button" class="btn btn-info btn-block ui ui-order">remove</button>
+
+				<nav>
+					<div class="nav nav-tabs" id="nav-tab" role="tablist">
+						<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
+						<a class="nav-item nav-link" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="false">Info</a>
 					</div>
-					<div class="col">
-						<button name="browse" type="button" class="btn btn-info btn-block ui ui-order">browse</button>
+				</nav>
+
+
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade show active space-up" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+						<div class="row">
+							<div class="col">
+								<button name="remove" type="button" class="btn btn-info btn-block ui ui-order">remove</button>
+							</div>
+							<div class="col">
+								<button name="browse" type="button" class="btn btn-info btn-block ui ui-order">browse</button>
+							</div>
+						</div>
+
+						<form>
+						  
+							<div class="form-group space-up">
+								<label for="exampleTextEmail1">Email address</label>
+								<input type="text" class="form-control ui ui-field ui-container-text" name="email" id="exampleTextEmail1" aria-describedby="ariatext" placeholder="Enter text" value="opa">
+								<small id="ariatext" class="form-text text-muted">We'll never share your email with anyone else.</small>
+							</div>
+							<div class="row">
+								<div class="col">
+									<div class="radio">
+										<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="1">Option 1</label>
+									</div>
+								</div>
+								<div class="col">
+									<div class="radio">
+										<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="2">Option 2</label>
+									</div>
+								</div>
+								<div class="col">
+									<div class="radio">
+										<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="3" checked>Option 3</label>
+									</div> 
+								</div>
+							</div>
+									
+							<div class="form-check">
+								<input type="checkbox" class="form-check-input ui ui-field ui-container-boolean" name="check-me" id="exampleCheck1">
+								<label class="form-check-label" for="exampleCheck1">Check me out</label>
+							</div>
+							<select class="form-control form-control-sm ui ui-field ui-container-option" name="options">
+								<option value="1">Opt1</option>
+								<option value="2" selected="">Opt2</option>
+								<option value="3" >Opt3</option>
+							</select>
+						</form>
+							
+					</div>
+					<div class="tab-pane fade space-up" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
+						Bot designed by <a href="https://github.com/gresendesa">@gresendesa</a>
 					</div>
 				</div>
 
-				<form>
-				  
-				  	<div class="form-group">
-				    	<label for="exampleTextEmail1">Email address</label>
-				    	<input type="text" class="form-control ui ui-field ui-container-text" name="email" id="exampleTextEmail1" aria-describedby="ariatext" placeholder="Enter text" value="opa">
-				    	<small id="ariatext" class="form-text text-muted">We'll never share your email with anyone else.</small>
-				  	</div>
-				  	<div class="row">
-						<div class="col">
-							<div class="radio">
-								<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="1">Option 1</label>
-							</div>
-						</div>
-						<div class="col">
-							<div class="radio">
-								<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="2">Option 2</label>
-							</div>
-						</div>
-						<div class="col">
-							<div class="radio">
-								<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="3" checked>Option 3</label>
-							</div> 
-						</div>
-					</div>
-							
-				  	<div class="form-check">
-				    	<input type="checkbox" class="form-check-input ui ui-field ui-container-boolean" name="check-me" id="exampleCheck1">
-				    	<label class="form-check-label" for="exampleCheck1">Check me out</label>
-				  	</div>
-					<select class="form-control form-control-sm ui ui-field ui-container-option" name="options">
-						<option value="1">Opt1</option>
-						<option value="2" selected="">Opt2</option>
-						<option value="3" >Opt3</option>
-					</select>
-				</form>
+					
 			</div>
 			<div class="card-footer text-muted">
-				2 days ago
+				<a href="https://github.com/gresendesa/browser-bot">Code on Github</a>
 			</div>
 		</div>
 	</div>
