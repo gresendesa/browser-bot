@@ -73,11 +73,11 @@ class UI {
 			})
 			
 			const sendLoadMessage = tabs => {
-				let message = {
+				let message = new Message({
 					context: 'content',
 					subject: 'event',
 					item: 'loaded'
-				}
+				})
 				chrome.tabs.sendMessage(tabs[0].id, message)
 			}
 
@@ -102,6 +102,7 @@ class UI {
 		chrome.runtime.onMessage.addListener(handleEvents)
 
 		this.fetchState({ callback })
+		this.getBotCurrentSequence({ callback: () => {} })
 
 	}
 
@@ -179,12 +180,13 @@ class UI {
 			active: true,
 			currentWindow: true
 		}
-		const message = {
+		const message = new Message({
 			context: 'content',
 			subject: 'order',
 			item: e.target.name,
 			data: this.state
-		}
+		})
+
 		const sendClickMessage = (tabs) => {
 			console.log('sending', message, 'to', tabs[0].id, queryInfo)
 			chrome.tabs.sendMessage(tabs[0].id, message, (message) => {
@@ -213,9 +215,16 @@ class UI {
 	fetchState({ callback }) {
 		//console.log('ui constants', UI.CONSTANTS['UI_STATE'])
 		console.log('fetching state')
-		const request = { context: "background", subject: "get", item: UI.CONSTANTS['UI_STATE'], data: null }
+		const request = new Message({ context: "background", subject: "get", item: UI.CONSTANTS['UI_STATE'] })
 		chrome.runtime.sendMessage(request, (response) => {
 			if(typeof callback === 'function') callback(response.data)
+		})
+	}
+
+	getBotCurrentSequence({ callback }) {
+		const request = new Message({ context: "background", subject: "get", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'] })
+		chrome.runtime.sendMessage(request, (response) => {
+			console.log('bot-current-sequence', response)
 		})
 	}
 
@@ -233,7 +242,7 @@ class UI {
 			}
 			console.log(before, '+', state, '=', this.state, 'replace', replace)
 		}
-		const request = { context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} }
+		const request = new Message({ context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} })
 		chrome.runtime.sendMessage(request, (response) => {
 			if(typeof callback === 'function') callback(response.data)
 		})
@@ -245,7 +254,7 @@ class UI {
 	*/
 	updateField({ type, name, value, callback }) {
 		this.state.fields[type][name] = value
-		const request = { context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} }
+		const request = new Message({ context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} })
 		chrome.runtime.sendMessage(request, (response) => {
 			if(typeof callback === 'function') callback(response.data)
 		})
