@@ -17,34 +17,46 @@ class Bot {
 	*/
 	constructor() {
 		$jSpaghetti.Storage = BackgroundStorage
-		const onOrder = (message, sender, sendReponse) => {
+		const onMessage = (message, sender, sendReponse) => {
 			//console.log(message)
 			const { text, color } = new BrowserConsole()
-			sendReponse(new Message({ subject: 'event', item: 'received' }))
-			const order = message.item
-			const bot = message.data
-			if(order === "loaded"){
-				console.log(text('window opened'), color('info'))
-			} else
-			if(order === "remove"){
-				const props = bot
-				this.startSequence({ moduleName: 'foo', sequenceName: 'remove', props })
-			} else
-			if(order === "browse"){
-				this.startSequence({ moduleName: 'browse', sequenceName: 'browse-on-internet' })
-			} else 
-			if(order === "stop"){
-				this.stop(() => {
-					console.log(text('program stopped'), color('success'))
-				})
-			} else {
-				console.log(text('unknown command'), color('warning'), message)
-			}
+			const { context, subject, item, data } = message
+			const bot = data
+			if(context === 'content'){
+				if (subject === 'order'){
 
+					sendReponse(new Message({ subject: 'event', item: 'received' }))
+
+					if(item === "remove"){
+						const props = bot
+						this.startSequence({ moduleName: 'foo', sequenceName: 'remove', props })
+					} else
+					if(item === "browse"){
+						this.startSequence({ moduleName: 'browse', sequenceName: 'browse-on-internet' })
+					} else 
+					if(item === "stop"){
+						this.stop(() => {
+							console.log(text('program stopped'), color('success'))
+						})
+					} else {
+						console.log(text('unknown command'), color('warning'), message)
+					}
+
+				} else
+
+				if (subject === 'event'){
+
+					if(item === "loaded"){
+						console.log(text('window opened'), color('info'))
+					} 
+
+				} 
+				
+			}
 			return true
 		}
 
-		chrome.runtime.onMessage.addListener(onOrder)
+		chrome.runtime.onMessage.addListener(onMessage)
 	}
 
 	/*

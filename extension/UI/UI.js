@@ -36,8 +36,14 @@ class UI {
 
 			if(request.context === 'ui'){
 				if(request.subject === 'bot-reset'){
-					this.freeze(false)
-					sendResponse({ subject: 'response', item: 'received' })
+					let state = {
+						freezed: false
+					}
+					let callback = response => {
+						this.freeze(false)
+						sendResponse({ subject: 'response', item: 'received' })
+					}
+					this.updateState({ state, callback })
 				} else 
 				if(request.subject === 'update-state'){
 					this.updateState({
@@ -65,12 +71,22 @@ class UI {
 			this.renderFields((elem) => {
 				elem.addEventListener('change', this.onFieldChange)
 			})
+			
+			const sendLoadMessage = tabs => {
+				let message = {
+					context: 'content',
+					subject: 'event',
+					item: 'loaded'
+				}
+				chrome.tabs.sendMessage(tabs[0].id, message)
+			}
 
 			let queryInfo = {
 				active: true,
 				currentWindow: true
 			}
-			chrome.tabs.query(queryInfo, UI.sendLoadMessage)
+
+			chrome.tabs.query(queryInfo, sendLoadMessage)
 		} 
 
 		const callback = (state) => {
@@ -95,7 +111,7 @@ class UI {
 		to do whatever the programmer wants
 	*/
 	renderFields = hook => {
-		console.log('rendering again')
+		console.log('rendering...')
 		let fields = document.getElementsByClassName('ui-field')
 		Array.prototype.forEach.call(fields, elem => {
 
@@ -108,6 +124,7 @@ class UI {
 			}
 
 			let elemClass = elem.className
+
 			if(elemClass.includes('ui-container-text')){
 				 if(!assignValue(elem, 'value', this.state.fields.text[elem.name])){
 				 	this.state.fields.text[elem.name] = elem.value
@@ -132,6 +149,9 @@ class UI {
 				}
 				
 			}
+			if(this.state.freezed){
+				this.freeze(true)
+			}
 			if(typeof hook === 'function'){
 				hook(elem)
 			}
@@ -146,17 +166,6 @@ class UI {
 		Array.prototype.forEach.call(uis, (elem) => {
 			elem.disabled = yesOrNo
 		})
-	}
-
-	/*
-		It emits a message as soon as the popup is loaded after clicking browser action
-	*/
-	static sendLoadMessage(tabs){
-		const message = {
-			subject: 'event',
-			item: 'loaded'
-		}
-		chrome.tabs.sendMessage(tabs[0].id, message)
 	}
 
 	/*
@@ -179,11 +188,18 @@ class UI {
 		const sendClickMessage = (tabs) => {
 			console.log('sending', message, 'to', tabs[0].id, queryInfo)
 			chrome.tabs.sendMessage(tabs[0].id, message, (message) => {
-				this.freeze(true)
 				console.info('click response', message)
 				if(message === undefined){
 					console.info('ENDING DID NOT RESPOND. Sending order again!')
 					chrome.tabs.query(queryInfo, sendClickMessage)
+				} else {
+					let state = {
+						freezed: true
+					}
+					let callback = response => {
+						this.freeze(true)
+					}
+					this.updateState({ state, callback })
 				}
 			})
 		}
@@ -195,7 +211,7 @@ class UI {
 		It get state from background script and it passed the data to callback argument
 	*/
 	fetchState({ callback }) {
-		console.log('ui constants', UI.CONSTANTS['UI_STATE'])
+		//console.log('ui constants', UI.CONSTANTS['UI_STATE'])
 		console.log('fetching state')
 		const request = { context: "background", subject: "get", item: UI.CONSTANTS['UI_STATE'], data: null }
 		chrome.runtime.sendMessage(request, (response) => {
@@ -206,17 +222,20 @@ class UI {
 	/*
 		It updates the state both the on background script and on the object itself
 	*/
-	updateState({ state, callback, replace=false }){
-		console.log('ui constants', UI.CONSTANTS['UI_STATE'])
-		console.log('updating state')
-		const request = { context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: state }
-		chrome.runtime.sendMessage(request, (response) => {
+	updateState({ state, callback, replace = false }){
+		//console.log('ui constants', UI.CONSTANTS['UI_STATE'])
+		if(state){
+			let before = {...this.state }
 			if(replace){
 				this.state = state
 			} else {
-				Object.assign(this.state, {...state})
+				this.state = Deep.merge({...this.state}, {...state})
 			}
-			if(typeof callback === 'function') callback()
+			console.log(before, '+', state, '=', this.state, 'replace', replace)
+		}
+		const request = { context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} }
+		chrome.runtime.sendMessage(request, (response) => {
+			if(typeof callback === 'function') callback(response.data)
 		})
 	}
 
@@ -228,7 +247,7 @@ class UI {
 		this.state.fields[type][name] = value
 		const request = { context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} }
 		chrome.runtime.sendMessage(request, (response) => {
-			if(typeof callback === 'function') callback()
+			if(typeof callback === 'function') callback(response.data)
 		})
 	}
 
