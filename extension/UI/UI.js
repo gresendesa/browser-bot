@@ -35,12 +35,18 @@ class UI {
 		const handleEvents = (request, sender, sendResponse) => {
 
 			if(request.context === 'ui'){
-				sendResponse({subject: 'response', item: 'received'})
 				if(request.subject === 'bot-reset'){
-					
+					this.freeze(false)
+					sendResponse({ subject: 'response', item: 'received' })
 				} else 
 				if(request.subject === 'update-state'){
-
+					this.updateState({
+						state: request.data,
+						callback: () => {
+							sendResponse({ subject: 'response', item: 'updated' })
+						}
+					})
+					
 				}
 			}
 
