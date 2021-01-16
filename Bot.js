@@ -171,5 +171,8 @@ class Bot {
 			}
 			this.state.ready = true
 		})
+		Browser.listenToErrors((errorMessage) => {
+			UI.showMessage(errorMessage, 'dark')
+		})
 	}
 }

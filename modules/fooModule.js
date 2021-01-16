@@ -35,6 +35,7 @@ fooMod.procedure("A", function(shared){
     return true
 })
 fooMod.procedure("B", function(shared){
+    t
 	console.log("B",shared)
     console.log("over the lazy dog")
     return true

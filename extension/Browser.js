@@ -24,4 +24,8 @@ class Browser {
 		chrome.tabs.query(queryInfo, callback)
 	}
 
+	static listenToErrors(callback){
+		//Currently no way to do that was found
+	}
+
 }
