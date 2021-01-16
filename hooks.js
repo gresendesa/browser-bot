@@ -24,7 +24,7 @@ class Util {
 	*/
 	updateUI = function({ state, callback }) {
 		const request = new Message({ context: "ui", subject: "update-state", data: state })
-		chrome.runtime.sendMessage(request, (response) => {
+		Browser.sendMessage(request, (response) => {
 			if(typeof callback === 'function'){
 				callback(response)
 			}
@@ -46,6 +46,17 @@ class Util {
 			state,
 			callback
 		})
+	}
+
+
+	/*
+	
+		https://getbootstrap.com/docs/4.0/utilities/colors/
+		show messages in UI
+
+	*/
+	showMessage = ({ message, level='light' }) => {
+		UI.showMessage(message, level)
 	}
 
 }

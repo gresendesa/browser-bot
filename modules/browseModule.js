@@ -7,7 +7,7 @@ mod.config.debugMode = true
 
 mod.sequence("browse-on-internet").instructions = [
     {"start":             ["get-first-links"]},
-    {"start-browsing":    ["access-next-link", {"exit": "!*.isThereLinks"}, "scrap-page-links", {"jumpif":[1, "start-browsing"]}]}
+    {"start-browsing":    ["get-random-link", {"exit": "!*.isThereLinks"}, "scrap-page-links", {"jumpif":[1, "start-browsing"]}]}
 ]
 
 //*****************************************************//
@@ -15,12 +15,17 @@ mod.sequence("browse-on-internet").instructions = [
 //_____________________________________________________//
 
 mod.procedure("get-first-links", function(shared){
-    shared.links = ["https://www.google.com.br","https://www.mercadolivre.com.br"]
+    shared.links = ["https://www.globo.com"]
     return true
 })
 
-mod.procedure("access-next-link", function(shared, hooks){
-    var link = shared.links.shift()
+mod.procedure("get-random-link", function(shared, hooks){
+    //var link = shared.links.shift()
+
+    var link = shared.links[Math.floor(Math.random() * shared.links.length)]
+
+    hooks.showMessage({ message: `Get random link from the list: ${link}`, level: 'primary' })
+
     shared.isThereLinks = false
     hooks.next()
     if(link){
@@ -32,11 +37,15 @@ mod.procedure("access-next-link", function(shared, hooks){
     }
 })
 
-mod.procedure("scrap-page-links", function(shared){
+mod.procedure("scrap-page-links", function(shared, hooks){
+
+    shared.links = []
+
     if(shared.isThereLinks){
         var links = document.getElementsByTagName('a')
         const { text, color } = new BrowserConsole('links', 10)
         console.log(text(links.length), color('warning'))
+        hooks.showMessage({ message: `I've got ${links.length} more links`, level: 'info' })
         Array.prototype.forEach.call(links, (l) => {
             shared.links.push(l.href)
         })

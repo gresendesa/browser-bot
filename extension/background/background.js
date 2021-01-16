@@ -1,4 +1,4 @@
-chrome.runtime.onMessage.addListener(requestHandler)
+Browser.listenToMessages(requestHandler)
 
 var storage = []
 

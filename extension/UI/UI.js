@@ -53,7 +53,13 @@ class UI {
 							this.renderFields()
 						}
 					})
-					
+				} else 
+				if(request.subject === 'onthefly-output'){
+					const container = document.getElementById('onthefly-output')
+					container.className = container.className.replace(/\bbg-\S+\b/, request.data.classes.bg)
+					container.className = container.className.replace(/\btext-\S+\b/, request.data.classes.text)
+					container.innerHTML = request.data.value
+					sendResponse({ subject: 'response', item: 'output written' })
 				}
 			}
 
@@ -67,6 +73,9 @@ class UI {
 			Array.prototype.forEach.call(orders, (elem) => {
 				elem.addEventListener('click', this.activateOrderTrigger)
 			})
+			Array.prototype.forEach.call(orders, (elem) => {
+				elem.addEventListener('contextmenu', this.activateOrderTrigger)
+			})
 
 			this.renderFields((elem) => {
 				elem.addEventListener('change', this.onFieldChange)
@@ -78,7 +87,7 @@ class UI {
 					subject: 'event',
 					item: 'loaded'
 				})
-				chrome.tabs.sendMessage(tabs[0].id, message)
+				Browser.sendMessageToTab(tabs[0].id, message)
 			}
 
 			let queryInfo = {
@@ -86,7 +95,7 @@ class UI {
 				currentWindow: true
 			}
 
-			chrome.tabs.query(queryInfo, sendLoadMessage)
+			Browser.queryTabs(queryInfo, sendLoadMessage)
 		} 
 
 		const updateUIFreeze = () => {
@@ -114,9 +123,35 @@ class UI {
 		}
 
 		//Receive messages from background-script and content script
-		chrome.runtime.onMessage.addListener(handleEvents)
+		Browser.listenToMessages(handleEvents)
 		this.fetchState({ callback })
 
+	}
+
+	static showMessage(content, level='light') {
+
+		//scheme from https://getbootstrap.com/docs/4.0/utilities/colors/
+		const levels = {
+			'primary': { bg: 'bg-primary', text: 'text-white' },
+			'secondary': { bg: 'bg-secondary', text: 'text-white' },
+			'success': { bg: 'bg-success', text: 'text-white' },
+			'danger': { bg: 'bg-danger', text: 'text-white' },
+			'waning': { bg: 'bg-warning', text: 'text-dark' },
+			'info': { bg: 'bg-info', text: 'text-white' },
+			'light': { bg: 'bg-light', text: 'text-dark' },
+			'dark': { bg: 'bg-dark', text: 'text-white' },
+			'white': { bg: 'bg-white', text: 'text-dark' },
+		}
+
+		const message = new Message({
+			context: "ui", 
+			subject: "onthefly-output", 
+			data: { value: content, classes: ((typeof levels[level] === 'undefined') ? levels['light'] : levels[level]) }
+		})
+
+		Browser.sendMessage(message, (response) => {
+			console.log(response)
+		})
 	}
 
 	/*
@@ -189,24 +224,36 @@ class UI {
 		repeatedly messages not received
 	*/
 	activateOrderTrigger = (e) => {
+		
 		let queryInfo = {
 			active: true,
 			currentWindow: true
 		}
+
 		const message = new Message({
 			context: 'content',
-			subject: 'order',
+			subject: 'sequence',
 			item: e.target.name,
 			data: this.state
 		})
 
+		if(e.target.name === 'stop'){
+
+			message.subject = 'order'
+
+		} else 
+
+		if(e.type === 'contextmenu'){
+			message.subject = 'sequence-test'
+		} 
+
 		const sendClickMessage = (tabs) => {
 			console.log('sending', message, 'to', tabs[0].id, queryInfo)
-			chrome.tabs.sendMessage(tabs[0].id, message, (message) => {
+			Browser.sendMessageToTab(tabs[0].id, message, (message) => {
 				console.info('click response', message)
 				if(message === undefined){
 					console.info('ENDING DID NOT RESPOND. Sending order again!')
-					chrome.tabs.query(queryInfo, sendClickMessage)
+					Browser.queryTabs(queryInfo, sendClickMessage)
 				} else {
 					let state = {
 						freezed: true
@@ -219,7 +266,7 @@ class UI {
 			})
 		}
 
-		chrome.tabs.query(queryInfo, sendClickMessage)
+		Browser.queryTabs(queryInfo, sendClickMessage)
 	}
 
 	/*
@@ -229,7 +276,7 @@ class UI {
 		//console.log('ui constants', UI.CONSTANTS['UI_STATE'])
 		console.log('fetching state')
 		const request = new Message({ context: "background", subject: "get", item: UI.CONSTANTS['UI_STATE'] })
-		chrome.runtime.sendMessage(request, (response) => {
+		Browser.sendMessage(request, (response) => {
 			if(typeof callback === 'function') callback(response.data)
 		})
 	}
@@ -239,12 +286,12 @@ class UI {
 			active: true,
 			currentWindow: true
 		}
-		chrome.tabs.query(queryInfo, (tabs) => {
+		Browser.queryTabs(queryInfo, (tabs) => {
 			const data = {
 				tabId: tabs[0].id
 			}
 			const request = new Message({ context: "background", subject: "get", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'], data })
-			chrome.runtime.sendMessage(request, (response) => {
+			Browser.sendMessage(request, (response) => {
 				if(typeof callback === 'function') callback(response.data)
 			})
 
@@ -266,7 +313,7 @@ class UI {
 			console.log(before, '+', state, '=', this.state, 'replace', replace)
 		}
 		const request = new Message({ context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} })
-		chrome.runtime.sendMessage(request, (response) => {
+		Browser.sendMessage(request, (response) => {
 			if(typeof callback === 'function') callback(response.data)
 		})
 	}
@@ -278,7 +325,7 @@ class UI {
 	updateField({ type, name, value, callback }) {
 		this.state.fields[type][name] = value
 		const request = new Message({ context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} })
-		chrome.runtime.sendMessage(request, (response) => {
+		Browser.sendMessage(request, (response) => {
 			if(typeof callback === 'function') callback(response.data)
 		})
 	}

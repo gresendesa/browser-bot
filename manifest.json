@@ -13,6 +13,8 @@
 			"js": [
 				"vendor/jSpaghetti.min.js",
 				"vendor/BrowserConsole.js",
+
+				"extension/Browser.js",
 				"extension/UI/UI.js",
 
 				"hooks.js",
@@ -33,6 +35,7 @@
 	"background": {
 		"scripts": [
 			"vendor/BrowserConsole.js",
+			"extension/Browser.js",
 			"extension/Message.js",
 			"extension/background/background.js"
 		],

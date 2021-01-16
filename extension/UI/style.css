@@ -21,3 +21,12 @@
 .space-up {
 	margin-top: 1em;
 }
+
+.onthefly-output {
+	font-family: "Courier New";
+	font-size: 18px;
+}
+
+.output-footer {
+	padding: 0 0 0 0;
+}

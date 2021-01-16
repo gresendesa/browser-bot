@@ -23,40 +23,56 @@ class Bot {
 			const { context, subject, item, data } = message
 			const bot = data
 			if(context === 'content'){
+
+				if ((subject === 'sequence') || (subject === 'sequence-test')){
+
+					sendReponse(new Message({ subject: 'response', item: 'sequence received' }))
+
+					const [ moduleName, sequenceName ] = item.split(':',2)
+					
+					if(subject === 'sequence-test'){
+						sequenceName = 'test'
+					}
+
+					const props = bot
+					this.startSequence({ moduleName, sequenceName, props })
+
+				} else
+
 				if (subject === 'order'){
 
-					sendReponse(new Message({ subject: 'event', item: 'received' }))
+					sendReponse(new Message({ subject: 'response', item: 'stop order received' }))
 
-					if(item === "remove"){
-						const props = bot
-						this.startSequence({ moduleName: 'foo', sequenceName: 'remove', props })
-					} else
-					if(item === "browse"){
-						this.startSequence({ moduleName: 'browse', sequenceName: 'browse-on-internet' })
-					} else 
 					if(item === "stop"){
 						this.stop(() => {
 							console.log(text('program stopped'), color('success'))
 						})
-					} else {
-						console.log(text('unknown command'), color('warning'), message)
 					}
 
 				} else
 
 				if (subject === 'event'){
 
+					sendReponse(new Message({ subject: 'response', item: 'event received' }))
+
 					if(item === "loaded"){
+
 						console.log(text('window opened'), color('info'))
+
 					} 
 
-				} 
+				} else {
+
+					sendReponse(new Message({ subject: 'response', item: 'unknown content subject' }))
+
+				}
 				
 			}
+
 			return true
 		}
 
-		chrome.runtime.onMessage.addListener(onMessage)
+		Browser.listenToMessages(onMessage)
 	}
 
 	/*
@@ -68,12 +84,14 @@ class Bot {
 			const { moduleName, sequenceName } = this.state.currentSequence
 			$jSpaghetti.module(moduleName).sequence(sequenceName).reset(() => {
 				const request = new Message({ context: "background", subject: "reset", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE']})
-				chrome.runtime.sendMessage(request, (response) => {
+				Browser.sendMessage(request, (response) => {
 					this.state.currentSequence = null
+					UI.showMessage('Done!', 'success')
 					if(typeof callback === 'function') callback()
 				})
 			})
 		} else {
+			UI.showMessage('Done!', 'success')
 			if(typeof callback === 'function') callback()
 		}
 	}
@@ -90,8 +108,8 @@ class Bot {
 		if(this.state.ready){
 			this.reset(callback)
 			const request = new Message({ context: "ui", subject: "bot-reset" })
-			chrome.runtime.sendMessage(request, (response) => {
-				console.log(response)
+			Browser.sendMessage(request, (response) => {
+				//console.log(response)
 			})
 		} else {
 			setTimeout(() => {
@@ -112,7 +130,7 @@ class Bot {
 			sequenceName
 		}
 		const request = new Message({ context: "background", subject: "set", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'], data: this.state.currentSequence })
-		chrome.runtime.sendMessage(request, (response) => {
+		Browser.sendMessage(request, (response) => {
 			const sequence = $jSpaghetti.module(moduleName).sequence(sequenceName)
 
 			Object.assign(sequence.hooks, new Util()) //Push custom hooks to sequence
@@ -127,6 +145,8 @@ class Bot {
 			}
 			sequence.events.addEventListener("terminated", resetSequence)
 			sequence.run()
+			UI.showMessage('Running sequence', 'info')
+
 		})	
 	}
 
@@ -137,7 +157,7 @@ class Bot {
 	*/
 	start() {
 		const request = new Message({ context: "background", subject: "get", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE'] })
-		chrome.runtime.sendMessage(request, (response) => {
+		Browser.sendMessage(request, (response) => {
 			if(response.data){
 				const { moduleName, sequenceName } = response.data
 				this.startSequence({ moduleName, sequenceName })
