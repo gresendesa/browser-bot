@@ -60,5 +60,7 @@ The UI data are stored as an object separated by type as following example:
 }
 ```
 
+Each `.ui-order` element should contain in `name` attribute, the jSpaghetti module followed by the sequence name. module and sequence name must be separated with the `:` character. The button which stops the bot should carry the "stop" string on the name attribute.
+
 
 
