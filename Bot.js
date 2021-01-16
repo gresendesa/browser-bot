@@ -86,12 +86,11 @@ class Bot {
 				const request = new Message({ context: "background", subject: "reset", item: Bot.CONSTANTS['CURRENT_SEQUENCE_STORAGE']})
 				Browser.sendMessage(request, (response) => {
 					this.state.currentSequence = null
-					UI.showMessage('Done!', 'success')
 					if(typeof callback === 'function') callback()
 				})
 			})
 		} else {
-			UI.showMessage('Done!', 'success')
+			UI.showMessage('Done! Already stopped!', 'success')
 			if(typeof callback === 'function') callback()
 		}
 	}
@@ -141,9 +140,17 @@ class Bot {
 			const resetSequence = () => {
 				this.stop(() => {
 					sequence.events.removeEventListener("terminated", resetSequence)
+					UI.showMessage('Done!', 'success')
+				})				
+			}
+			const errorSequence = (error) => {
+				this.stop(() => {
+					sequence.events.removeEventListener("error", errorSequence)
+					UI.showMessage(error.detail, 'danger')
 				})				
 			}
 			sequence.events.addEventListener("terminated", resetSequence)
+			sequence.events.addEventListener("error", errorSequence)
 			sequence.run()
 			UI.showMessage('Running sequence', 'info')
 
