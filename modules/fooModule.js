@@ -1,16 +1,20 @@
-let mdule = $jSpaghetti.module("foo")
-mdule.config.debugMode = true
+let fooMod = $jSpaghetti.module("foo")
+fooMod.config.debugMode = true
 
 //*****************************************************//
 // SEQUENCES INSTRUCTIONS ↓ ↓ ↓
 //_____________________________________________________//
 
-mdule.sequence("remove").instructions = [
+fooMod.sequence("test").instructions = [
+    {1: ["test0"]}
+]
+
+fooMod.sequence("remove").instructions = [
     {0: "C"},
     {"foo": [{"wait":2000},"A", "B"]}
 ]
 
-mdule.sequence("clear").instructions = [
+fooMod.sequence("clear").instructions = [
     {0: "_exit"}
 ]
 
@@ -18,17 +22,24 @@ mdule.sequence("clear").instructions = [
 // PROCEDURES ↓ ↓ ↓
 //_____________________________________________________//
 
-mdule.procedure("A", function(shared){
+fooMod.procedure("test0", function(shared, hooks){
+    hooks.showMessage({ message: `Testing...`, level: 'warning' })
+    setTimeout(() => {
+        hooks.next(true)
+    }, 2000)
+})
+
+fooMod.procedure("A", function(shared){
 	console.log("A",shared)
     console.log("brown fox jumps ")
     return true
 })
-mdule.procedure("B", function(shared){
+fooMod.procedure("B", function(shared){
 	console.log("B",shared)
     console.log("over the lazy dog")
     return true
 })
-mdule.procedure("C", function(shared, hooks){
+fooMod.procedure("C", function(shared, hooks){
 	console.log("C",shared, hooks)
     const { sayHello, updateUI, next } = hooks
     let state = {

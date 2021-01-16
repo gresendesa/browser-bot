@@ -136,7 +136,7 @@ class UI {
 			'secondary': { bg: 'bg-secondary', text: 'text-white' },
 			'success': { bg: 'bg-success', text: 'text-white' },
 			'danger': { bg: 'bg-danger', text: 'text-white' },
-			'waning': { bg: 'bg-warning', text: 'text-dark' },
+			'warning': { bg: 'bg-warning', text: 'text-dark' },
 			'info': { bg: 'bg-info', text: 'text-white' },
 			'light': { bg: 'bg-light', text: 'text-dark' },
 			'dark': { bg: 'bg-dark', text: 'text-white' },
@@ -150,7 +150,7 @@ class UI {
 		})
 
 		Browser.sendMessage(message, (response) => {
-			console.log(response)
+			//console.log(response)
 		})
 	}
 
@@ -310,7 +310,7 @@ class UI {
 			} else {
 				this.state = Deep.merge({...this.state}, {...state})
 			}
-			console.log(before, '+', state, '=', this.state, 'replace', replace)
+			//console.log(before, '+', state, '=', this.state, 'replace', replace)
 		}
 		const request = new Message({ context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} })
 		Browser.sendMessage(request, (response) => {

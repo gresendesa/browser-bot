@@ -1,11 +1,15 @@
-let mod = $jSpaghetti.module("browse")
-mod.config.debugMode = true
+let browseMod = $jSpaghetti.module("browse")
+browseMod.config.debugMode = true
 
 //*****************************************************//
 // SEQUENCES INSTRUCTIONS ↓ ↓ ↓
 //_____________________________________________________//
 
-mod.sequence("browse-on-internet").instructions = [
+browseMod.sequence("test").instructions = [
+    {1: ["test0"]}
+]
+
+browseMod.sequence("browse-on-internet").instructions = [
     {"start":             ["get-first-links"]},
     {"start-browsing":    ["get-random-link", {"exit": "!*.isThereLinks"}, "scrap-page-links", {"jumpif":[1, "start-browsing"]}]}
 ]
@@ -14,12 +18,19 @@ mod.sequence("browse-on-internet").instructions = [
 // PROCEDURES ↓ ↓ ↓
 //_____________________________________________________//
 
-mod.procedure("get-first-links", function(shared){
+browseMod.procedure("test0", function(shared, hooks){
+    hooks.showMessage({ message: `Testing...`, level: 'warning' })
+    setTimeout(() => {
+        hooks.next(true)
+    }, 2000)
+})
+
+browseMod.procedure("get-first-links", function(shared){
     shared.links = ["https://www.globo.com"]
     return true
 })
 
-mod.procedure("get-random-link", function(shared, hooks){
+browseMod.procedure("get-random-link", function(shared, hooks){
     //var link = shared.links.shift()
 
     var link = shared.links[Math.floor(Math.random() * shared.links.length)]
@@ -37,7 +48,7 @@ mod.procedure("get-random-link", function(shared, hooks){
     }
 })
 
-mod.procedure("scrap-page-links", function(shared, hooks){
+browseMod.procedure("scrap-page-links", function(shared, hooks){
 
     shared.links = []
 

@@ -28,7 +28,7 @@ class Bot {
 
 					sendReponse(new Message({ subject: 'response', item: 'sequence received' }))
 
-					const [ moduleName, sequenceName ] = item.split(':',2)
+					var [ moduleName, sequenceName ] = item.split(':',2)
 					
 					if(subject === 'sequence-test'){
 						sequenceName = 'test'
