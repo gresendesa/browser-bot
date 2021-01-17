@@ -36,7 +36,7 @@
 			"core/vendor/BrowserConsole.js",
 			"core/extension/Browser.js",
 			"core/extension/Message.js",
-			"core/extension/background.js"
+			"mybot/background.js"
 		],
 		"persistent": true
 	},
