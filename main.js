@@ -1,4 +1,4 @@
-(new Extension()).start()
+(new Bot()).start()
 
 //*****************************************************//
 // put below sequences that should be running everytime

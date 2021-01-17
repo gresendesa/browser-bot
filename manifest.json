@@ -11,18 +11,17 @@
 			],
 			"run_at": "document_end",
 			"js": [
-				"vendor/jSpaghetti.min.js",
-				"vendor/BrowserConsole.js",
+				"core/vendor/jSpaghetti.min.js",
+				"core/vendor/BrowserConsole.js",
 
-				"extension/Browser.js",
-				"extension/UI/UI.js",
+				"core/extension/Browser.js",
+				"mybot/UI.js",
 
-				"hooks.js",
-				"Bot.js",
+				"mybot/hooks.js",
+				"mybot/Bot.js",
 
-				"extension/Message.js",
-				"extension/BackgroundStorage.js",
-				"extension/Extension.js",
+				"core/extension/Message.js",
+				"core/extension/BackgroundStorage.js",
 
 				"modules/fooModule.js",
 				"modules/browseModule.js",
@@ -34,19 +33,16 @@
 	],
 	"background": {
 		"scripts": [
-			"vendor/BrowserConsole.js",
-			"extension/Browser.js",
-			"extension/Message.js",
-			"extension/background/background.js"
+			"core/vendor/BrowserConsole.js",
+			"core/extension/Browser.js",
+			"core/extension/Message.js",
+			"core/extension/background.js"
 		],
 		"persistent": true
 	},
 	"browser_action": {
 		"default_icon": "icon.png",
-		"default_popup": "extension/UI/popup.html",
-		"default_title": "Extension popup",
-		"scripts": [
-			"extension/Message.js"
-		]
+		"default_popup": "mybot/index.html",
+		"default_title": "Bot"
 	}
 }
