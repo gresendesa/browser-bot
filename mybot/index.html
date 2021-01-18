@@ -25,7 +25,7 @@
 				<nav>
 					<div class="nav nav-tabs" id="nav-tab" role="tablist">
 						<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Jira</a>
-						<a class="nav-item nav-link" id="nav-output-tab" data-toggle="tab" href="#nav-output" role="tab" aria-controls="nav-output" aria-selected="false">Output</a>
+						<a class="nav-item nav-link" id="nav-confluence-tab" data-toggle="tab" href="#nav-confluence" role="tab" aria-controls="nav-confluence" aria-selected="false">Confluence</a>
 						<a class="nav-item nav-link" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="false">Info</a>
 					</div>
 				</nav>
@@ -45,10 +45,10 @@
 						<form>
 							<div class="row space-up">
 								<div class="col">
-									<input type="text" class="form-control ui ui-field ui-container-text" name="username" placeholder="Nome de usuário">
+									<input type="text" class="form-control form-control-sm ui ui-field ui-container-text" name="username" placeholder="Nome de usuário">
 								</div>
 								<div class="col">
-									<input type="password" class="form-control ui ui-field ui-container-text" name="password" placeholder="Senha">
+									<input type="password" class="form-control form-control-sm ui ui-field ui-container-text" name="password" placeholder="Senha">
 								</div>
 							</div>
 							<small id="ariatext" class="form-text text-muted">Estes dados não serão transmitidos</small>
@@ -84,17 +84,44 @@
 										<option value="2021" selected="">2021</option>
 									</select>
 								</div>
+
+								
+
 							</div>
+
+							<div class="row space-up">	
+								
+								<div class="col">
+									<button class="btn btn-default" type="button" data-toggle="collapse" data-target="#jira-input" aria-expanded="false" aria-controls="jira-input" id="button-open-jira-input">Entrada</button>
+								</div>
+								<div class="col">
+									<button class="btn btn-default" type="button" data-toggle="collapse" data-target="#jira-output" aria-expanded="false" aria-controls="jira-output" id="button-open-jira-output">Saída</button>
+								</div>
+
+								
+
+							</div>
+
+							<div class="space-up">	
+								<div class="collapse" id="jira-input">
+									<label for="output-area"><small>Entre com os dados de entrada para o processamento</small></label>
+									<textarea class="form-control output-container ui ui-field ui-container-text" name="jira-input" id="jira-input-area" rows="2"></textarea>
+								</div>
+							</div>
+
+							<div class="space-up">
+								<div class="collapse" id="jira-output">
+									<label for="output-area"><small>Pegue o resultado do processamento aqui</small></label>
+									<textarea class="form-control output-container ui ui-field ui-container-text" name="jira-output" id="jira-output-area" rows="2" disabled=""></textarea>
+								</div>
+							</div>
+								
 
 						</form>
 							
 					</div>
-					<div class="tab-pane fade space-up" id="nav-output" role="tabpanel" aria-labelledby="nav-output-tab">
-
-						<div class="form-group">
-							<label for="output-area">Pegue o output do seu processamento aqui</label>
-							<textarea class="form-control output-container ui ui-field ui-container-text" name="output" id="output-area" rows="5"></textarea>
-						</div>
+					<div class="tab-pane fade space-up" id="nav-confluence" role="tabpanel" aria-labelledby="nav-confluence-tab">
+						Tasks do Confluence virão aqui!
 					</div>
 
 					<div class="tab-pane fade space-up" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">

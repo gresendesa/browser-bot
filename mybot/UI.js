@@ -225,6 +225,8 @@ class UI {
 	*/
 	activateOrderTrigger = (e) => {
 		
+		e.preventDefault()
+
 		let queryInfo = {
 			active: true,
 			currentWindow: true

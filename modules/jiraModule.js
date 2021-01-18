@@ -59,10 +59,16 @@ jiraModule.procedure("ler-demandas", function(shared, hooks){
 				}
 			})
 			const demanda = new hooks.classes.Jira.Demanda(values[0], values[3], values[4], Number(values[5]), Number(values[6]))
-			console.log(demanda)
+			demandas.push(demanda)
 		}
 	})
-	return false
+	const rel = hooks.classes.Jira.gerarRelatorioTabular(demandas)
+
+	const [ type, name, value, callback ] = [ 'text', 'jira-output', rel, () => {
+		hooks.next(true)
+	}]
+
+	hooks.updateUIField({ type, name, value, callback })
 
 })
 
