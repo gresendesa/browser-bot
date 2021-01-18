@@ -15,6 +15,9 @@
 				"core/vendor/BrowserConsole.js",
 
 				"core/extension/Browser.js",
+
+				"platforms/Jira.js",
+
 				"mybot/UI.js",
 
 				"mybot/hooks.js",
@@ -23,8 +26,7 @@
 				"core/extension/Message.js",
 				"core/extension/BackgroundStorage.js",
 
-				"modules/fooModule.js",
-				"modules/browseModule.js",
+				"modules/jiraModule.js",
 
 
 				"main.js"

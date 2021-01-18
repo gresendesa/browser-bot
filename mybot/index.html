@@ -12,10 +12,10 @@
 			<div class="card-header">
 				<div class="row">
 					<div class="col box">
-						<h3 class="title">Browser Bot</h3>
+						<h3 class="title">Bot da SEGSI</h3>
 					</div>
 					<div class="col text-right">
-						<button name="stop" type="button" class="btn btn-danger ui-order">STOP</button>
+						<button name="stop" type="button" class="btn btn-danger ui-order">PARAR</button>
 					</div>
 				</div>
 			</div>
@@ -24,7 +24,8 @@
 
 				<nav>
 					<div class="nav nav-tabs" id="nav-tab" role="tablist">
-						<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
+						<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Jira</a>
+						<a class="nav-item nav-link" id="nav-output-tab" data-toggle="tab" href="#nav-output" role="tab" aria-controls="nav-output" aria-selected="false">Output</a>
 						<a class="nav-item nav-link" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="false">Info</a>
 					</div>
 				</nav>
@@ -34,52 +35,70 @@
 					<div class="tab-pane fade show active space-up" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
 						<div class="row">
 							<div class="col">
-								<button name="foo:remove" type="button" class="btn btn-info btn-block ui ui-order">remove</button>
+								<button name="jira:relatório-de-faturamento" type="button" class="btn btn-info btn-block ui ui-order">relatório de faturamento</button>
 							</div>
 							<div class="col">
-								<button name="browse:browse-on-internet" type="button" class="btn btn-info btn-block ui ui-order">browse</button>
+								<button name="jira:dizer-olá" type="button" class="btn btn-info btn-block ui ui-order">dizer olá</button>
 							</div>
 						</div>
 
 						<form>
-						  
-							<div class="form-group space-up">
-								<label for="exampleTextEmail1">Email address</label>
-								<input type="text" class="form-control ui ui-field ui-container-text" name="email" id="exampleTextEmail1" aria-describedby="ariatext" placeholder="Enter text" value="opa">
-								<small id="ariatext" class="form-text text-muted">We'll never share your email with anyone else.</small>
-							</div>
-							<div class="row">
+							<div class="row space-up">
 								<div class="col">
-									<div class="radio">
-										<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="1">Option 1</label>
-									</div>
+									<input type="text" class="form-control ui ui-field ui-container-text" name="username" placeholder="Nome de usuário">
 								</div>
 								<div class="col">
-									<div class="radio">
-										<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="2">Option 2</label>
-									</div>
-								</div>
-								<div class="col">
-									<div class="radio">
-										<label><input type="radio" class="ui ui-field ui-container-radio" name="optradio" value="3" checked>Option 3</label>
-									</div> 
+									<input type="password" class="form-control ui ui-field ui-container-text" name="password" placeholder="Senha">
 								</div>
 							</div>
-									
-							<div class="form-check">
-								<input type="checkbox" class="form-check-input ui ui-field ui-container-boolean" name="check-me" id="exampleCheck1">
-								<label class="form-check-label" for="exampleCheck1">Check me out</label>
+							<small id="ariatext" class="form-text text-muted">Estes dados não serão transmitidos</small>
+
+							<div class="row space-up">
+								<div class="col form-group">
+									<label for="mês-select">mês</label>
+									<select class="form-control ui ui-field ui-container-option" id="mês-select" name="mes">
+										<option value="1" selected="">Janeiro</option>
+										<option value="2">Fevereiro</option>
+										<option value="3">Março</option>
+										<option value="4">Abril</option>
+										<option value="5">Maio</option>
+										<option value="6">Junho</option>
+										<option value="7">Julho</option>
+										<option value="8">Agosto</option>
+										<option value="9">Setembro</option>
+										<option value="10">Outubro</option>
+										<option value="11">Novembro</option>
+										<option value="12">Dezembro</option>
+									</select>
+								</div>
+
+
+								
+								<div class="col form-group">
+									<label for="ano-select">ano</label>
+									<select class="form-control ui ui-field ui-container-option" id="ano-select" name="ano">
+										<option value="2017">2017</option>
+										<option value="2018">2018</option>
+										<option value="2019">2019</option>
+										<option value="2020">2020</option>
+										<option value="2021" selected="">2021</option>
+									</select>
+								</div>
 							</div>
-							<select class="form-control form-control-sm ui ui-field ui-container-option" name="options">
-								<option value="1">Opt1</option>
-								<option value="2" selected="">Opt2</option>
-								<option value="3" >Opt3</option>
-							</select>
+
 						</form>
 							
 					</div>
+					<div class="tab-pane fade space-up" id="nav-output" role="tabpanel" aria-labelledby="nav-output-tab">
+
+						<div class="form-group">
+							<label for="output-area">Pegue o output do seu processamento aqui</label>
+							<textarea class="form-control output-container ui ui-field ui-container-text" name="output" id="output-area" rows="5"></textarea>
+						</div>
+					</div>
+
 					<div class="tab-pane fade space-up" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
-						Bot designed by <a href="https://github.com/gresendesa">@gresendesa</a>
+						Bot criado pelo estagiário <a href="https://github.com/gresendesa">@gresendesa</a> em 2021. 
 					</div>
 				</div>
 
@@ -93,7 +112,8 @@
 			</div>
 		</div>
 	</div>
-		
+	
+
 	<script type="text/javascript" src="assets/jquery-3.5.1.min.js"></script>
 	<script type="text/javascript" src="assets/bootstrap-4.1/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="../core/vendor/deep-merge.js"></script>
