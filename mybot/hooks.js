@@ -58,7 +58,19 @@ class Util {
 		return document.evaluate(path, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 	}
 
-	jira = new Jira()
+	/*
+	
+		https://getbootstrap.com/docs/4.0/utilities/colors/
+		show messages in UI
+
+	*/
+	showMessage = ({ message, level='light' }) => {
+		UI.showMessage(message, level)
+	}
+
+	classes = {
+		'Jira': Jira
+	}
 
 
 }

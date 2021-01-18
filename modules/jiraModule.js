@@ -7,11 +7,11 @@ jiraModule.config.debugMode = true
 
 jiraModule.sequence("relatório-de-faturamento").instructions = [
     {'@inicio': "iniciar-processo"},
-    {'@entrar': ["logar-se-necessário", "selecionar-mês-ano"]}
+    {'@entrar': ["logar-se-necessário", "selecionar-mês-ano", "ler-demandas"]}
 ]
 
 jiraModule.sequence("test").instructions = [
-    {'@test': "selecionar-mês-ano"},
+    {'@test': "ler-demandas"},
 ]
 
 jiraModule.sequence("dizer-olá").instructions = [
@@ -42,6 +42,28 @@ jiraModule.procedure("logar-se-necessário", function(shared, hooks){
 		document.getElementById('login-form-submit').click()
 	}
 	return false
+})
+
+jiraModule.procedure("ler-demandas", function(shared, hooks){
+
+	hooks.showMessage('pegando demandas')
+	let container = hooks.getElementByXpath('//*[@id="content"]/div[2]/div/section/div[2]/table/tbody')
+	if (!container) throw 'sem demandas neste mês'
+	const demandas = []
+	container.childNodes.forEach(node => {
+		if (node.nodeName === 'TR'){
+			const values = []
+			node.childNodes.forEach(node => {
+				if (node.nodeName === 'TD'){
+					values.push(node.innerText)
+				}
+			})
+			const demanda = new hooks.classes.Jira.Demanda(values[0], values[3], values[4], Number(values[5]), Number(values[6]))
+			console.log(demanda)
+		}
+	})
+	return false
+
 })
 
 jiraModule.procedure("selecionar-mês-ano", function(shared, hooks){
