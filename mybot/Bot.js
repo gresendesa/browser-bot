@@ -90,7 +90,7 @@ class Bot {
 				})
 			})
 		} else {
-			UI.showMessage('Done! Already stopped!', 'success')
+			UI.showMessage('Pronto! Aliás, já estava parado!', 'success')
 			if(typeof callback === 'function') callback()
 		}
 	}
@@ -140,7 +140,7 @@ class Bot {
 			const resetSequence = () => {
 				this.stop(() => {
 					sequence.events.removeEventListener("terminated", resetSequence)
-					UI.showMessage('Done!', 'success')
+					UI.showMessage('Pronto!', 'success')
 				})				
 			}
 			const errorSequence = (error) => {
@@ -152,7 +152,7 @@ class Bot {
 			sequence.events.addEventListener("terminated", resetSequence)
 			sequence.events.addEventListener("error", errorSequence)
 			sequence.run()
-			UI.showMessage('Running sequence', 'info')
+			UI.showMessage('Executando a tarefa', 'info')
 
 		})	
 	}

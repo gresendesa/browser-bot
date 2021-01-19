@@ -162,6 +162,7 @@ class UI {
 	renderFields = hook => {
 		console.log('rendering...')
 		let fields = document.getElementsByClassName('ui-field')
+		console.log(this.state)
 		Array.prototype.forEach.call(fields, elem => {
 
 			const assignValue = (element, attr, value) => {
@@ -303,16 +304,14 @@ class UI {
 	/*
 		It updates the state both the on background script and on the object itself
 	*/
-	updateState({ state, callback, replace = false }){
+	updateState = ({ state, callback, replace = false }) => {
 		//console.log('ui constants', UI.CONSTANTS['UI_STATE'])
 		if(state){
-			let before = {...this.state }
 			if(replace){
-				this.state = state
+				this.state = {...state}
 			} else {
 				this.state = Deep.merge({...this.state}, {...state})
 			}
-			//console.log(before, '+', state, '=', this.state, 'replace', replace)
 		}
 		const request = new Message({ context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} })
 		Browser.sendMessage(request, (response) => {
@@ -324,7 +323,7 @@ class UI {
 		It updates a field from state
 		It updates the state both the on background script and on the object itself
 	*/
-	updateField({ type, name, value, callback }) {
+	updateField = ({ type, name, value, callback }) => {
 		this.state.fields[type][name] = value
 		const request = new Message({ context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} })
 		Browser.sendMessage(request, (response) => {
