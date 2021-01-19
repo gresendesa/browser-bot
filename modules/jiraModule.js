@@ -34,14 +34,22 @@ jiraModule.procedure("iniciar-processo", function(shared, hooks){
 })
 
 jiraModule.procedure("logar-se-necessário", function(shared, hooks){
+
 	if(window.location.pathname === '/login.jsp'){
-		hooks.next(true)
-		const { username, password } = shared.props.fields.text
-		document.getElementById('login-form-username').value = username
-		document.getElementById('login-form-password').value = password
-		document.getElementById('login-form-submit').click()
+		if(!shared.tryingToLogin){
+			shared.tryingToLogin = true
+			const { username, password } = shared.props.fields.text
+			document.getElementById('login-form-username').value = username
+			document.getElementById('login-form-password').value = password
+			document.getElementById('login-form-submit').click()
+		} else {
+			shared.tryingToLogin = false
+			throw 'não foi possível se autenticar'
+		}
+	} else {
+		shared.tryingToLogin = false
+		return true
 	}
-	return false
 })
 
 jiraModule.procedure("ler-demandas", function(shared, hooks){
