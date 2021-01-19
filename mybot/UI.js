@@ -18,7 +18,18 @@ class UI {
 
 	static get CONSTANTS() {
 		return {
-			'UI_STATE': 'ui-state'
+			'UI_STATE': 'ui-state',
+			'PRINT_LEVELS': {
+				'primary': { bg: 'bg-primary', text: 'text-white' },
+				'secondary': { bg: 'bg-secondary', text: 'text-white' },
+				'success': { bg: 'bg-success', text: 'text-white' },
+				'danger': { bg: 'bg-danger', text: 'text-white' },
+				'warning': { bg: 'bg-warning', text: 'text-dark' },
+				'info': { bg: 'bg-info', text: 'text-white' },
+				'light': { bg: 'bg-light', text: 'text-dark' },
+				'dark': { bg: 'bg-dark', text: 'text-white' },
+				'white': { bg: 'bg-white', text: 'text-dark' }
+			}
 		}
 	}
 
@@ -55,10 +66,7 @@ class UI {
 					})
 				} else 
 				if(request.subject === 'onthefly-output'){
-					const container = document.getElementById('onthefly-output')
-					container.className = container.className.replace(/\bbg-\S+\b/, request.data.classes.bg)
-					container.className = container.className.replace(/\btext-\S+\b/, request.data.classes.text)
-					container.innerHTML = request.data.value
+					this.printMessage(request.data.value, request.data.classes)
 					sendResponse({ subject: 'response', item: 'output written' })
 				}
 			}
@@ -128,20 +136,26 @@ class UI {
 
 	}
 
+	/*
+		Prints a message using the bootstrap classes defined on CONSTANTS['PRINT_LEVEL']
+	*/
+	printMessage(message, classes) {
+		const container = document.getElementById('onthefly-output')
+		container.className = container.className.replace(/\bbg-\S+\b/, classes.bg)
+		container.className = container.className.replace(/\btext-\S+\b/, classes.text)
+		container.innerHTML = message
+	}
+
+
+	/*
+		This method is supposed to be used to others scopes
+		It sends a message to UI itself in order to print the message
+		Use printMessage() if you want to print from object itself
+	*/
 	static showMessage(content, level='light') {
 
 		//scheme from https://getbootstrap.com/docs/4.0/utilities/colors/
-		const levels = {
-			'primary': { bg: 'bg-primary', text: 'text-white' },
-			'secondary': { bg: 'bg-secondary', text: 'text-white' },
-			'success': { bg: 'bg-success', text: 'text-white' },
-			'danger': { bg: 'bg-danger', text: 'text-white' },
-			'warning': { bg: 'bg-warning', text: 'text-dark' },
-			'info': { bg: 'bg-info', text: 'text-white' },
-			'light': { bg: 'bg-light', text: 'text-dark' },
-			'dark': { bg: 'bg-dark', text: 'text-white' },
-			'white': { bg: 'bg-white', text: 'text-dark' },
-		}
+		const levels = UI.CONSTANTS['PRINT_LEVELS']
 
 		const message = new Message({
 			context: "ui", 
@@ -162,7 +176,7 @@ class UI {
 	renderFields = hook => {
 		console.log('rendering...')
 		let fields = document.getElementsByClassName('ui-field')
-		console.log(this.state)
+		//console.log(this.state)
 		Array.prototype.forEach.call(fields, elem => {
 
 			const assignValue = (element, attr, value) => {
