@@ -6,8 +6,9 @@ jiraModule.config.debugMode = true
 //_____________________________________________________//
 
 jiraModule.sequence("relatório-de-faturamento").instructions = [
-    {'@inicio': "iniciar-processo"},
-    {'@entrar': ["logar-se-necessário", "selecionar-mês-ano", "ler-demandas"]}
+    {'@inicio': 			["iniciar-processo"]},
+    {'@entrar': 			["logar-se-necessário", "selecionar-mês-ano", "ler-demandas", {"exit":"!SHARED.relatorioExtendido"}]},
+    {'@demanda-a-demanda': 	["demanda-seguinte"]}
 ]
 
 jiraModule.sequence("test").instructions = [
@@ -24,13 +25,15 @@ jiraModule.sequence("dizer-olá").instructions = [
 //_____________________________________________________//
 
 jiraModule.procedure("dizer", function(shared, hooks){
-   alert('Olá ^.^')
-   return true
+	//throw shared.props.fields.boolean['relatório-de-faturamento-extendido']
+	alert('Olá ^.^')
+	return true
 })
 
 jiraModule.procedure("iniciar-processo", function(shared, hooks){
-   hooks.next(true)
-   hooks.navigate('https://jira.engesoftware.com.br/plugins/servlet/faturamentoreport')
+	shared.relatorioExtendido = shared.props.fields.boolean['relatório-de-faturamento-extendido']
+	hooks.next(true)
+	hooks.navigate('https://jira.engesoftware.com.br/plugins/servlet/faturamentoreport')
 })
 
 jiraModule.procedure("logar-se-necessário", function(shared, hooks){
@@ -70,6 +73,8 @@ jiraModule.procedure("ler-demandas", function(shared, hooks){
 			demandas.push(demanda)
 		}
 	})
+
+	shared.demandasParaVisitar = demandas
 	const rel = hooks.classes.Jira.gerarRelatorioTabular(demandas)
 
 	const [ type, name, value, callback ] = [ 'text', 'jira-output', rel, () => {
@@ -93,6 +98,12 @@ jiraModule.procedure("selecionar-mês-ano", function(shared, hooks){
 		//console.log(mes, ano, shared.props.fields)
 	}
 	return false
+})
+
+jiraModule.procedure("demanda-seguinte", function(shared, hooks){
+
+	throw "demanda seguinte"
+
 })
 
 //plugins/servlet/faturamentoreport
