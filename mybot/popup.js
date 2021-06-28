@@ -1,4 +1,10 @@
-var userInterface = new UI()
+var userInterface = new UI({
+	filters: {
+		fields: {
+			
+		}
+	}
+})
 const { updateField } = userInterface;
 
 document.getElementById('button-open-jira-input').addEventListener('contextmenu', (event) => {

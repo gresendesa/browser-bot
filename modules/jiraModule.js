@@ -8,7 +8,7 @@ jiraModule.config.debugMode = true
 jiraModule.sequence("relatório-de-faturamento").instructions = [
     {'@inicio': 			["iniciar-processo"]},
     {'@entrar': 			["logar-se-necessário", "selecionar-mês-ano", "ler-demandas", {"exit":"!SHARED.relatorioExtendido"}]},
-    {'@demanda-a-demanda': 	["demanda-seguinte"]}
+    {'@demanda-a-demanda': 	["demanda-seguinte", "dizer"]}
 ]
 
 jiraModule.sequence("test").instructions = [
@@ -18,7 +18,6 @@ jiraModule.sequence("test").instructions = [
 jiraModule.sequence("dizer-olá").instructions = [
     {'@começar': "dizer"},
 ]
-
 
 //*****************************************************//
 // PROCEDURES ↓ ↓ ↓
@@ -102,7 +101,19 @@ jiraModule.procedure("selecionar-mês-ano", function(shared, hooks){
 
 jiraModule.procedure("demanda-seguinte", function(shared, hooks){
 
-	throw "demanda seguinte"
+	if(!Array.isArray(shared.demandasExtendidas)){
+		shared.demandasExtendidas = []
+	}
+
+	let demanda = shared.demandasParaVisitar.shift()
+	if(demanda){
+		hooks.showMessage(`faltando ${shared.demandasParaVisitar.length} para acessar!`, 'warning')
+		hooks.navigate(`https://jira.engesoftware.com.br/browse/${demanda.nome}`)
+	} else {
+		throw 'acabaram as demandas'
+	}
+
+	//shared.demandasExtendidas.push()
 
 })
 

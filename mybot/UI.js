@@ -16,6 +16,15 @@ class UI {
 		freezed: false
 	}
 
+	filters = {
+		fields: {
+			text: {},
+			boolean: {},
+			option: {},
+			radio: {}
+		}
+	}
+
 	static get CONSTANTS() {
 		return {
 			'UI_STATE': 'ui-state',
@@ -40,8 +49,10 @@ class UI {
 		Fist of all it requires background script to get values on memory
 	*/
 
-	constructor() {
+	constructor({ filters }) {
 			
+
+		this.filters = Deep.merge(this.filters,filters)
 
 		const handleEvents = (request, sender, sendResponse) => {
 
