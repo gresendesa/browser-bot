@@ -13,6 +13,7 @@ class UI {
 			option: {},
 			radio: {}
 		},
+		tab: null,
 		freezed: false
 	}
 
@@ -72,7 +73,7 @@ class UI {
 						state: request.data,
 						callback: () => {
 							sendResponse({ subject: 'response', item: 'updated' })
-							this.renderFields()
+							this.render()
 						}
 					})
 				} else 
@@ -87,7 +88,7 @@ class UI {
 
 		const bootstrap = () => {
 
-			console.log('bootstrap', this.state)
+			//console.log('bootstrap', this.state)
 			let orders = document.getElementsByClassName('ui-order')
 			Array.prototype.forEach.call(orders, (elem) => {
 				elem.addEventListener('click', this.activateOrderTrigger)
@@ -96,7 +97,7 @@ class UI {
 				elem.addEventListener('contextmenu', this.activateOrderTrigger)
 			})
 
-			this.renderFields((elem) => {
+			this.render((elem) => {
 				elem.addEventListener('change', this.onFieldChange)
 			})
 			
@@ -184,7 +185,7 @@ class UI {
 		It accepts a hook which receives each element
 		to do whatever the programmer wants
 	*/
-	renderFields = hook => {
+	render = hook => {
 		console.log('rendering...')
 		let fields = document.getElementsByClassName('ui-field')
 		//console.log(this.state)
@@ -222,7 +223,6 @@ class UI {
 				if((elem.checked) && (!this.state.fields.radio[elem.name])){
 					this.state.fields.radio[elem.name] = elem.value
 				}
-				
 			}
 			if(this.state.freezed){
 				this.freeze(true)
@@ -231,6 +231,23 @@ class UI {
 				hook(elem)
 			}
 		})
+
+		let tabs = document.getElementsByClassName('ui-tab')
+
+		Array.prototype.forEach.call(tabs, (elem, index) => {
+			//console.log('tab', this.state.tab)
+			const tabId = elem.getAttribute('id')
+			if(!this.state.tab){
+				if(!index){
+					this.updateTab({ id: tabId })
+					this.activeTab(tabId)	
+				}
+			} else if(this.state.tab == tabId) {
+				this.activeTab(tabId)
+			}
+			elem.addEventListener('click', this.onTabClick)
+		})
+
 	}
 
 	/*
@@ -353,6 +370,34 @@ class UI {
 		const request = new Message({ context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} })
 		Browser.sendMessage(request, (response) => {
 			if(typeof callback === 'function') callback(response.data)
+		})
+	}
+
+	/*
+		It updates the tam from state
+		It updates the state both the on background script and on the object itself
+	*/
+	updateTab = ({ id, callback }) => {
+		this.state.tab = id
+		const request = new Message({ context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} })
+		Browser.sendMessage(request, (response) => {
+			if(typeof callback === 'function') callback(response.data)
+		})
+	}
+
+	activeTab = (tabId) => {
+		$(`#${tabId}`).tab('show')
+	}
+
+	/*
+		It handles user tab interactions
+	*/
+	onTabClick = (event) => {
+		const tabId = event.target.getAttribute('id')
+		this.state.tab = tabId
+		const request = new Message({ context: "background", subject: "set", item: UI.CONSTANTS['UI_STATE'], data: {...this.state} })
+		Browser.sendMessage(request, (response) => {
+			this.activeTab(tabId)
 		})
 	}
 

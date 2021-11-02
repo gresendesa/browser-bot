@@ -11,7 +11,7 @@ document.getElementById('button-open-jira-input').addEventListener('contextmenu'
 	event.preventDefault()
 	const [ type, name, value ] = [ 'text', 'jira-input', ' ' ]
 	const callback = () => {
-		userInterface.renderFields()
+		userInterface.render()
 		userInterface.printMessage('OK! input limpo', UI.CONSTANTS['PRINT_LEVELS'].success)
 	}
 	updateField({ type, name, value, callback })
@@ -21,7 +21,7 @@ document.getElementById('button-open-jira-output').addEventListener('contextmenu
 	event.preventDefault()
 	const [ type, name, value ] = [ 'text', 'jira-output', ' ' ]
 	const callback = () => {
-		userInterface.renderFields()
+		userInterface.render()
 		userInterface.printMessage('OK! output limpo', UI.CONSTANTS['PRINT_LEVELS'].success)
 	}
 	updateField({ type, name, value, callback })
