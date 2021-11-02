@@ -68,9 +68,4 @@ class Util {
 		UI.showMessage(message, level)
 	}
 
-	classes = {
-		'Jira': Jira
-	}
-
-
 }

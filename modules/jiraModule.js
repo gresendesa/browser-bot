@@ -32,7 +32,7 @@ jiraModule.procedure("dizer", function(shared, hooks){
 jiraModule.procedure("iniciar-processo", function(shared, hooks){
 	shared.relatorioExtendido = shared.props.fields.boolean['relatório-de-faturamento-extendido']
 	hooks.next(true)
-	hooks.navigate('https://jira.engesoftware.com.br/plugins/servlet/faturamentoreport')
+	hooks.util.navigate('https://jira.engesoftware.com.br/plugins/servlet/faturamentoreport')
 })
 
 jiraModule.procedure("logar-se-necessário", function(shared, hooks){
@@ -56,8 +56,8 @@ jiraModule.procedure("logar-se-necessário", function(shared, hooks){
 
 jiraModule.procedure("ler-demandas", function(shared, hooks){
 
-	hooks.showMessage('pegando demandas')
-	let container = hooks.getElementByXpath('//*[@id="content"]/div[2]/div/section/div[2]/table/tbody')
+	hooks.util.showMessage('pegando demandas')
+	let container = hooks.util.getElementByXpath('//*[@id="content"]/div[2]/div/section/div[2]/table/tbody')
 	if (!container) throw 'sem demandas neste mês'
 	const demandas = []
 	container.childNodes.forEach(node => {
@@ -80,18 +80,18 @@ jiraModule.procedure("ler-demandas", function(shared, hooks){
 		hooks.next(true)
 	}]
 
-	hooks.updateUIField({ type, name, value, callback })
+	hooks.util.updateUIField({ type, name, value, callback })
 
 })
 
 jiraModule.procedure("selecionar-mês-ano", function(shared, hooks){
 	if(window.location.pathname === '/plugins/servlet/faturamentoreport'){
-		const mesSelect = hooks.getElementByXpath('//*[@id="content"]/div[1]/div/section/form/div/fieldset/fieldset/div[1]/fieldset/div/select[1]')
-		const anoSelect = hooks.getElementByXpath('//*[@id="content"]/div/div/section/form/div/fieldset/fieldset/div[1]/fieldset/div/select[2]')
+		const mesSelect = hooks.util.getElementByXpath('//*[@id="content"]/div[1]/div/section/form/div/fieldset/fieldset/div[1]/fieldset/div/select[1]')
+		const anoSelect = hooks.util.getElementByXpath('//*[@id="content"]/div/div/section/form/div/fieldset/fieldset/div[1]/fieldset/div/select[2]')
 		const { mes, ano } = shared.props.fields.option
 		mesSelect.value = mes
 		anoSelect.value = ano
-		const submitButton = hooks.getElementByXpath('//*[@id="content"]/div/div/section/form/div/fieldset/fieldset/div[2]/div/div/input')
+		const submitButton = hooks.util.getElementByXpath('//*[@id="content"]/div/div/section/form/div/fieldset/fieldset/div[2]/div/div/input')
 		hooks.next(true)
 		submitButton.click()
 		//console.log(mes, ano, shared.props.fields)
@@ -107,8 +107,8 @@ jiraModule.procedure("demanda-seguinte", function(shared, hooks){
 
 	let demanda = shared.demandasParaVisitar.shift()
 	if(demanda){
-		hooks.showMessage(`faltando ${shared.demandasParaVisitar.length} para acessar!`, 'warning')
-		hooks.navigate(`https://jira.engesoftware.com.br/browse/${demanda.nome}`)
+		hooks.util.showMessage(`faltando ${shared.demandasParaVisitar.length} para acessar!`, 'warning')
+		hooks.util.navigate(`https://jira.engesoftware.com.br/browse/${demanda.nome}`)
 	} else {
 		throw 'acabaram as demandas'
 	}

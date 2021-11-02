@@ -16,13 +16,13 @@
 
 				"core/extension/Browser.js",
 				"core/extension/UI.js",
+				"core/extension/Util.js",
 				"core/extension/Bot.js",
 
 				"platforms/Jira.js",
 
 				"mybot/UserInterface.js",
 
-				"mybot/hooks.js",
 				"mybot/MyBot.js",
 
 				"core/extension/Message.js",

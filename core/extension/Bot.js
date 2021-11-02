@@ -72,7 +72,21 @@ class Bot {
 			return true
 		}
 
+		this.hooks = {
+			hello: () => {alert('hello')}
+		}
+
+		this.registerHook('util', new Util())
+
 		Browser.listenToMessages(onMessage)
+	}
+
+	/*
+		This function register internally the hooks that will be delivered
+		to the sequences
+	*/
+	registerHook(name, func){
+		this.hooks[name] = func
 	}
 
 	/*
@@ -132,7 +146,7 @@ class Bot {
 		Browser.sendMessage(request, (response) => {
 			const sequence = $jSpaghetti.module(moduleName).sequence(sequenceName)
 
-			Object.assign(sequence.hooks, new Util()) //Push custom hooks to sequence
+			Object.assign(sequence.hooks, this.hooks) //Push custom hooks to sequence
 			
 			if(props){
 				sequence.state.shared.props = props

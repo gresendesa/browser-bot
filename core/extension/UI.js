@@ -297,8 +297,10 @@ class UI {
 			Browser.sendMessageToTab(tabs[0].id, message, (message) => {
 				console.info('click response', message)
 				if(message === undefined){
-					console.info('ENDING DID NOT RESPOND. Sending order again!')
-					Browser.queryTabs(queryInfo, sendClickMessage)
+					setTimeout(() => {
+						console.info('ENDING DID NOT RESPOND. Sending order again!')
+						Browser.queryTabs(queryInfo, sendClickMessage)
+					},250)
 				} else {
 					let state = {
 						freezed: true
