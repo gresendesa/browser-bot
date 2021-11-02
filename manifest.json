@@ -15,13 +15,15 @@
 				"core/vendor/BrowserConsole.js",
 
 				"core/extension/Browser.js",
+				"core/extension/UI.js",
+				"core/extension/Bot.js",
 
 				"platforms/Jira.js",
 
-				"mybot/UI.js",
+				"mybot/UserInterface.js",
 
 				"mybot/hooks.js",
-				"mybot/Bot.js",
+				"mybot/MyBot.js",
 
 				"core/extension/Message.js",
 				"core/extension/BackgroundStorage.js",
